@@ -1,0 +1,23 @@
+--- # OQA - Open Question Answer configuration file
+
+# Section 1 - REST server hosts and ports
+# Support multiple ips and ports
+
+REST:
+#  disabled: true # Optional. Disable REST server if this is purely used as Postgresql to ES loader
+  endpointPrefix: /oqa/api/ # api endpoint prefix
+  listens:  # listens @ host and port
+    - host: localhost # host, ip v4
+      port: 8081 #port
+
+Default: # default domain and corresponding shard. Must be set
+  domain: default  # default domain if domain not provided in data actions
+  # shard: default  # default shard
+
+Shards:
+  default: # shard name as key to shard db config
+    host: localhost # postgresql first shard host
+    port: 5432 # postgresql first shard port
+    user: oqa # username
+    password: Oqa235813 # password
+    db: oqa # database name
