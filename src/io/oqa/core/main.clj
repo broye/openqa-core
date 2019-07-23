@@ -6,13 +6,12 @@
             ))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Boot strap server..."
   [& args]
   (let [config-file (first args)]
     (let [config (config/load-config config-file)]
       (let [{:keys [REST Default Shards]}  config]
-        (println REST Default Shards)
-        (db/init-db-service Default Shards)
+        ( "db-service " (db/init-db-service Default Shards))
         (if (:disabled REST)
           (println "OQA rest server disabled...")
           (server/start REST))

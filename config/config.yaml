@@ -12,12 +12,21 @@ REST:
 
 Default: # default domain and corresponding shard. Must be set
   domain: default  # default domain if domain not provided in data actions
-  # shard: default  # default shard
+  shard: default  # default shard
 
 Shards:
   default: # shard name as key to shard db config
-    host: localhost # postgresql first shard host
+    host: 127.0.0.1 # postgresql first shard host
     port: 5432 # postgresql first shard port
     user: oqa # username
     password: Oqa235813 # password
     db: oqa # database name
+    poolSize: 5 # connection pool size.
+
+  oqa2: # shard name as key to shard db config
+    host: 127.0.0.1 # postgresql first shard host
+    port: 5433 # postgresql first shard port
+    user: oqa2 # username
+    password: Oqa235813 # password
+    db: oqa2 # database name
+    poolSize: 5 # connection pool size.
