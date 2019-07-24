@@ -5,10 +5,9 @@
            (io.vertx.sqlclient PoolOptions)
            (io.vertx.core Handler)))
 
-
 ;; domain to connection mapping.
 ;; Could be updated in different threads
-(def ^{:private true} domain-to-connection (ref {}))
+(def domain-to-connection (ref {}))
 
 (defn initiate-pool
   "Initiate a connection pool with postgresql"
