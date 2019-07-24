@@ -12,7 +12,7 @@
 
 (defn initiate-pool
   "Initiate a connection pool with postgresql"
-  [{:keys [host port user password db poolSize]}]
+  [{:keys [host port user password db poolSize]} vertx]
   (println host port user password db poolSize)
   (let [poolOptions (. (PoolOptions.) setMaxSize (or poolSize 5))
         connectOptions (.. (PgConnectOptions.)
@@ -21,19 +21,19 @@
                            (setUser user)
                            (setPassword password))]
     (println "creating pool...")
-    (let [client (. PgPool pool connectOptions poolOptions)]
+    (let [client (. PgPool pool vertx connectOptions poolOptions)]
       (println "client created" client)
       client)))
 
 (defn init-db-service
   "Initiate db services for all postgresql db opertions"
-  [Default Shards]
+  [Default Shards vertx]
   (when-not (and (not (nil? Default)) (:domain Default) (:shard Default))
     (throw (new Exception "Config entry 'Default' with both keys domain and shard must be defined")))
   (println "Initating db services...")
   (let [defaultShard (:shard Default)
         defaultShardConfig ((keyword defaultShard) Shards)
-        defaultShardPool (initiate-pool defaultShardConfig)]
+        defaultShardPool (initiate-pool defaultShardConfig vertx)]
     (dosync
      (alter domain-to-connection assoc (Default :domain) defaultShardPool))
     (println "building domain to client mapping")
@@ -51,7 +51,7 @@
                    (when (nil? shardConfig)
                      (println "Shard not found")
                      (throw "Shard config not found"))
-                   (let [pool (initiate-pool shardConfig)]
+                   (let [pool (initiate-pool shardConfig vertx)]
                      (println "pool is: " pool)
                      (when pool
                        (dosync

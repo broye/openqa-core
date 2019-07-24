@@ -4,7 +4,7 @@
 # Support multiple ips and ports
 
 REST:
-#  disabled: true # Optional. Disable REST server if this is purely used as Postgresql to ES loader
+  disabled: false # Optional. Disable REST server if this is purely used as Postgresql to ES loader
   endpointPrefix: /oqa/api/ # api endpoint prefix
   listens:  # listens @ host and port
     - host: localhost # host, ip v4
@@ -28,5 +28,5 @@ Shards:
     port: 5433 # postgresql first shard port
     user: oqa2 # username
     password: Oqa235813 # password
-    db: oqa2 # database name
+    db: oqa # database name
     poolSize: 5 # connection pool size.
