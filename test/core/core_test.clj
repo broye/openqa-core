@@ -1,6 +1,5 @@
 (ns core.core-test
-  (:import (io.vertx.core Vertx Handler)
-           (io.vertx.core.net NetSocket))
+  (:import (io.vertx.core Vertx Handler))
   (:require [clojure.test :refer :all]
             [io.oqa.core.service.db.helpers :as helpers]
             [io.oqa.core.service.db :as db]
@@ -13,9 +12,10 @@
 
 (let [vertx (Vertx/vertx)
       {:keys [REST Default Shards]} config]
-  (db/init-db-service Default Shards vertx))
+  (db/init-db-service Default Shards))
 
 (println "NEW POST test >>>"  (posts/new-post {:title "test" :domain "default"}))
+(println "NEW POST test2 >>>"  (posts/new-post {:title "test" :domain "default"}))
 
 (deftest build-db-query
   (testing "build positions."
@@ -24,4 +24,4 @@
       (println (:query-string result) (:tuple result))
       (is (not (nil? (:query-string result)))))))
 
-(Thread/sleep 100000)
+;; (Thread/sleep 100000)
