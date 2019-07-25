@@ -1,9 +1,5 @@
 (ns io.oqa.core.service.db
-  (:import (io.vertx.pgclient
-            PgConnectOptions
-            PgPool)
-           (io.vertx.sqlclient PoolOptions)
-           (io.vertx.core Handler)))
+  (:require [postgres.async :refer [open-db]] ))
 
 ;; domain to connection mapping.
 ;; Could be updated in different threads
@@ -11,25 +7,24 @@
 
 (defn initiate-pool
   "Initiate a connection pool with postgresql"
-  [{:keys [host port user password db poolSize]} vertx]
+  [{:keys [host port user password db poolSize]}]
   (println host port user password db poolSize)
-  (let [poolOptions (. (PoolOptions.) setMaxSize (or poolSize 5))
-        connectOptions (.. (PgConnectOptions.)
-                           (setPort (or port 5432))
-                           (setDatabase (or db "oqa"))
-                           (setUser user)
-                           (setPassword password))]
-    (. PgPool pool vertx connectOptions poolOptions)))
+  (open-db {:hostname host
+            :port (or poart 5432)
+            :database db
+            :username user
+            :password password
+            :pool-size (or poolSize 25)}))
 
 (defn init-db-service
   "Initiate db services for all postgresql db opertions"
-  [Default Shards vertx]
+  [Default Shards]
   (when-not (and (not (nil? Default)) (:domain Default) (:shard Default))
     (throw (new Exception "Config entry 'Default' with both keys domain and shard must be defined")))
   (println "Initating db services...")
   (let [defaultShard (:shard Default)
         defaultShardConfig ((keyword defaultShard) Shards)
-        defaultShardPool (initiate-pool defaultShardConfig vertx)]
+        defaultShardPool (initiate-pool defaultShardConfig)]
     (dosync
      (alter domain-to-connection assoc (Default :domain) defaultShardPool))
     (println "building domain to client mapping")
@@ -47,7 +42,7 @@
                    (when (nil? shardConfig)
                      (println "Shard not found")
                      (throw "Shard config not found"))
-                   (let [pool (initiate-pool shardConfig vertx)]
+                   (let [pool (initiate-pool shardConfig)]
                      (println "pool is: " pool)
                      (when pool
                        (dosync
