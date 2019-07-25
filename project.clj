@@ -7,8 +7,6 @@
                  ;; https://mvnrepository.com/artifact/io.netty/netty-all
                  [io.vertx/vertx-core "3.8.0"]
                  [io.forward/yaml "1.0.9"]
-                 ;; [io.vertx/vertx-rx-java2 "3.8.0"]
-                 [io.reactivex/rxjava "1.3.8"]
                  [io.vertx/vertx-rx-java2 "3.8.0"]
                  [io.vertx/vertx-sql-common "3.8.0"]
                  [io.vertx/vertx-sql-client "3.8.0"]

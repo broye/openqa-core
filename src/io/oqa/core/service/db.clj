@@ -19,10 +19,7 @@
                            (setDatabase (or db "oqa"))
                            (setUser user)
                            (setPassword password))]
-    (println "creating pool...")
-    (let [client (. PgPool pool vertx connectOptions poolOptions)]
-      (println "client created" client)
-      client)))
+    (. PgPool pool vertx connectOptions poolOptions)))
 
 (defn init-db-service
   "Initiate db services for all postgresql db opertions"
