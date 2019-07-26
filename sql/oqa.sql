@@ -39,10 +39,10 @@ create table post (
        reply_to_user_name text, -- reply to user's name
        reply_to_user_avatar text, -- reply to user's avatar
        status char(1), -- publish status, p - published, d - deleted, i - initial draft, r - published and revising
-       answers_count integer, -- answers count, applies to question only
-       comments_count integer, -- comments count, applies to questions and answers
-       upvote_count integer, -- upvotes
-       downvote_count integer, -- downvotes
+       answers_count integer default 0, -- answers count, applies to question only
+       comments_count integer default 0, -- comments count, applies to questions and answers
+       upvote_count integer default 0, -- upvotes
+       downvote_count integer default 0, -- downvotes
        create_date timestamp with time zone, -- create date
        last_update timestamp with time zone -- last update
 );
