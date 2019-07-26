@@ -15,7 +15,8 @@ create table domain_shard (
 );
 
 create table post (
-       pid serial primary key, -- post id, auto increase serial
+       pid UUID primary key, -- post id
+       seq_id serial, -- sequence id, unique and time sequential
        title text, -- post title
        content text, -- post content
        content_lang char(1) , -- content markup language, h - html, m - markup
@@ -26,10 +27,11 @@ create table post (
        draft_content_external text , -- draft url for the content stored outside of postgresql. reserved. Prefer this to content if specified.
        domain varchar(80), -- domain name, will be mapped to shard, copied to entire thread
        topic varchar(80), -- discussion topic, copied to entire thread
-       tags varchar(80) [], -- tags array
+       tags varchar(80) [], -- functional tags array
+       meta_tags varchar(80) [], -- meta tags, for non-functional use
        type char(1), -- post type. q - question, a - answer, c -comment
-       qid integer, -- parent question id, for question same to qid, for answer/comment: ancester question id
-       aid integer, --parent answer id, for question, null, for answer, pid, for comment, parent answerid
+       qid UUID, -- parent question id, for question same to qid, for answer/comment: ancester question id
+       aid UUID, --parent answer id, for question, null, for answer, pid, for comment, parent answerid
        uid varchar(80), -- user id from external system
        user_name text, -- user name
        user_avatar text, -- user avatar url
@@ -45,8 +47,8 @@ create table post (
        last_update timestamp with time zone -- last update
 );
 
-create table votes (
-       pid integer, -- pid (question / answer / comment)
+create table vote (
+       pid UUID, -- pid (question / answer / comment)
        uid varchar(80), -- external user id
        uder_name text, -- external user name
        user_avatar text, -- external user avatar

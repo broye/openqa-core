@@ -15,6 +15,7 @@
 (defn new-post
   "Create new post"
   [ {:keys [title
+            pid
             content
             content_lang
             draft_title
@@ -23,6 +24,7 @@
             domain
             topic
             tags
+            meta_tags
             type
             qid
             aid
@@ -41,35 +43,40 @@
   (if (or (nil? domain) (nil? (get @domain-to-connection domain)))
     {:error-code :domain-not-found} ;; domain error
     (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))]
-      (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
-        (let [result (jdbc/insert! conn
-                                   :post
-                                   {:title title
-                                    :content content
-                                    :content_lang content_lang
-                                    :draft_title draft_title
-                                    :draft_content draft_content
-                                    :draft_content_lang draft_content_lang
-                                    :domain domain
-                                    :topic topic
-                                    :tags (and tags (format "'{%s}'" (str/join " " tags)))
-                                    :type type
-                                    :qid qid
-                                    :aid aid
-                                    :uid uid
-                                    :user_name user_name
-                                    :user_avatar user_avatar
-                                    :reply_to_uid reply_to_uid
-                                    :reply_to_user_name reply_to_user_name
-                                    :reply_to_user_avatar reply_to_user_avatar
-                                    :status status
-                                    :create_date now
-                                    :last_update now
-                                    }
-                                   :return-keys ["pid"])]
-          (if ( or (nil? result) (empty? result) (nil? (:pid (first result))) )
-            {:error-code :insert-failed}
-            {:error-code :ok
-             :data {:pid (:pid (first result))
-                    :last_update now
-                    :create_date now}}))))))
+      (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+             (let [result (jdbc/insert! conn
+                                        :post
+                                        {:title title
+                                         :pid (or pid (java.util.UUID/randomUUID))
+                                         :content content
+                                         :content_lang content_lang
+                                         :draft_title draft_title
+                                         :draft_content draft_content
+                                         :draft_content_lang draft_content_lang
+                                         :domain domain
+                                         :topic topic
+                                         :tags tags
+                                         :meta_tags meta_tags
+                                         :type type
+                                         :qid qid
+                                         :aid aid
+                                         :uid uid
+                                         :user_name user_name
+                                         :user_avatar user_avatar
+                                         :reply_to_uid reply_to_uid
+                                         :reply_to_user_name reply_to_user_name
+                                         :reply_to_user_avatar reply_to_user_avatar
+                                         :status status
+                                         :create_date now
+                                         :last_update now
+                                         }
+                                        :return-keys ["pid" "seq_id"])]
+               (if ( or (nil? result) (empty? result) (nil? (:pid (first result))) )
+                 {:error-code :insert-failed}
+                 {:error-code :ok
+                  :data {:pid (:pid (first result))
+                         :seq_id (:seq_id (first result))
+                         :last_update now
+                         :create_date now}})))
+           (catch Exception e ((println e) {:error-code :database-error}))
+           (catch Throwable e ((println e) {:error-code :unkown-error}))))))

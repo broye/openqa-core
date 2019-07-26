@@ -21,7 +21,7 @@ Shards:
     user: oqa # username
     password: Oqa235813 # password
     db: oqa # database name
-    poolSize: 5 # connection pool size.
+    poolSize: 20 # connection pool size.
 
   oqa2: # shard name as key to shard db config
     host: 127.0.0.1 # postgresql first shard host
@@ -29,4 +29,4 @@ Shards:
     user: oqa2 # username
     password: Oqa235813 # password
     db: oqa # database name
-    poolSize: 5 # connection pool size.
+    poolSize: 20 # connection pool size.

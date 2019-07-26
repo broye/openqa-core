@@ -14,8 +14,8 @@
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
 
-(println "NEW POST test >>>"  (posts/new-post {:title "test" :domain "default"}))
-(println "NEW POST test2 >>>"  (posts/new-post {:title "test" :domain "default"}))
+(println "NEW POST test >>>"  (posts/new-post {:title "test" :domain "default" :tags ["a" "b" "c"] :meta_tags ["1" "2" "3"]}))
+(println "NEW POST test2 >>>"  (posts/new-post {:title "test2" :domain "default" :tags ["a" "b" "c"] :meta_tags ["1" "2" "3"]}))
 
 (deftest build-db-query
   (testing "build positions."
