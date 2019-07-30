@@ -4,6 +4,7 @@
             [io.oqa.core.service.db.helpers :as helpers]
             [io.oqa.core.service.db :as db]
             [io.oqa.core.service.db.posts :as posts]
+            [io.oqa.core.service.db.user-info :as user-info]
             [io.oqa.core.bootstrap.config :as config]))
 
 (def config-file "/home/fqye/projects/oqa/core/config/config.yaml")
@@ -36,18 +37,20 @@
 ;;                                                      :meta_tags ["1" "2" "3"]
 ;;                                                      :folder "test"}))
 
-(println "Publish POST test >>>"  (posts/publish-post {:title "published test"
-                                                       :draft_title "Draft 2..."
-                                                       :domain "default"
-                                                       :type "q"
-                                                       :tags ["a" "b" "c"]
-                                                       :uid "a0001"
-                                                       :pid "3571d1b2-b8f8-4dba-b022-13833bd7277f"
-                                                       :topic "topic1"
-                                                       ;; :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
-                                                       :user_name "a0001"
-                                                       :meta_tags ["1" "2" "3"]
-                                                       :folder "test"}))
+;; (println "Publish POST test >>>"  (posts/publish-post {:title "published test"
+;;                                                        :draft_title "Draft 2..."
+;;                                                        :domain "default"
+;;                                                        :type "q"
+;;                                                        :tags ["a" "b" "c"]
+;;                                                        :uid "a0001"
+;;                                                        :pid "3571d1b2-b8f8-4dba-b022-13833bd7277f"
+;;                                                        :topic "topic1"
+;;                                                        ;; :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+;;                                                        :user_name "a0001"
+;;                                                        :meta_tags ["1" "2" "3"]
+;;                                                        :folder "test"}))
+
+(println "Update user infor" (user-info/update-user-info {:uid "a0001" :user_name "User 001" :domain "default"}))
 
 ;; (println "Mark POST deleted >>>"  (posts/mark-post-deleted {:title ""
 ;;                                                             :draft_title "Draft 2..."
