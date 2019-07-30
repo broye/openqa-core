@@ -53,15 +53,16 @@ create table stats (
        domain varchar(80), -- domain
        topic varchar(80), -- topic
        question_count integer, -- questions count
-       primary key ( domain, topic)
+       unique ( domain, topic)
 );
 
 create table vote (
+       seq_id serial, -- sequence id
        pid UUID, -- pid (question / answer / comment)
        uid varchar(80), -- external user id
        user_name text, -- external  user name
        user_avatar text, -- external user avatar
        type char(1), -- u : upvote, d : down vote
-       primary key (pid, uid, type), -- user can vote only once
+       primary key (pid, uid), -- user can vote only once
        last_update timestamp with time zone -- last update
 );

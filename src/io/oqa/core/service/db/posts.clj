@@ -63,6 +63,7 @@
             draft_content
             draft_content_lang
             domain
+            topic
             type
             qid
             aid
@@ -87,7 +88,7 @@
          } post]
     (if (not= error-code :ok) ;;check validate result
       error
-      (if  (or  (= type "q") (= status "i"))
+      (if  (= status "i")
         ;; question... straight forward insert.
         (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
                (let [result (jdbc/insert! conn
@@ -111,6 +112,24 @@
                                                  post
                                                  :return-keys ["pid" "seq_id"])
                      update-result (cond
+                                     ;; is question
+                                     (= type "q") (let [_ (println "starting insert...")
+                                                        result (jdbc/execute! conn
+                                                                              ["update stats set question_count = question_count + 1 where domain = ? And topic = ? " domain topic])]
+                                                    (println "inser --- " result)
+                                                    (if (= (first result) 1)
+                                                      result
+                                                      (let [result (jdbc/insert! conn
+                                                                                 :stats
+                                                                                 {:domain domain
+                                                                                  :topic topic
+                                                                                  :question_count 1}
+                                                                                 :return-keys ["pid"]
+                                                                                 )]
+                                                        (if (or (nil? result) (empty? result) )
+                                                          [0]
+                                                          [1]))))
+
                                      ;; is answer
                                      (= type "a") (jdbc/execute! conn
                                                                  ["update post set answers_count = answers_count + 1 where pid = ?" qid])
@@ -185,19 +204,33 @@
 
 (defn publish-post
   "Change a post's status from i to p"
-  [{:keys [pid qid aid domain type] :as post}]
+  [{:keys [pid qid aid domain type topic] :as post}]
   (try
     (if (= type "q")
       ;; question - change status to 'p' directly
       (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
-            count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
-                    (jdbc/update! conn
-                                  :post
-                                  {:status "p" :last_update now} ;; change status only
-                                  ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type]))]
-        (if (= (first count) 1)
-          {:error-code :ok}
-          {:error-code :post-not-found}))
+            _ (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
+                (let [[count] (jdbc/update! conn
+                                            :post
+                                            {:status "p" :last_update now} ;; change status only
+                                            ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type])]
+                  (if (not= count 1) ;; change status error
+                    (throw (ex-info "Publish post not found" {:error-code :publish-failed}))
+                    (let [result (jdbc/execute! conn
+                                                ["update stats set question_count = question_count + 1 where domain = ? And topic = ? " domain topic])]
+                      (if (= (first result) 1)
+                        result
+                        (let [result (jdbc/insert! conn
+                                                   :stats
+                                                   {:domain domain
+                                                    :topic topic
+                                                    :question_count 1}
+                                                   :return-keys ["pid"]
+                                                   )]
+                          (if (or (nil? result) (empty? result) )
+                            (throw (ex-info "Publish post not found" {:error-code :publish-failed})))))))))]
+        {:error-code :ok
+         :data {:last_update now}})
 
       ;; not question - update parent stat as well
       (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]

@@ -17,6 +17,7 @@
 ;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
 ;;                                                :draft_title "Draft..."
 ;;                                                :domain "default"
+;;                                                :topic "topic1"
 ;;                                                :tags ["a" "b" "c"]
 ;;                                                :uid "a0001"
 ;;                                                :user_name "a0001"
@@ -38,11 +39,12 @@
 (println "Publish POST test >>>"  (posts/publish-post {:title "published test"
                                                        :draft_title "Draft 2..."
                                                        :domain "default"
-                                                       :type "a"
+                                                       :type "q"
                                                        :tags ["a" "b" "c"]
                                                        :uid "a0001"
-                                                       :pid "2401f558-5073-4bb7-bde1-aa6aeea03abc"
-                                                       :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+                                                       :pid "3571d1b2-b8f8-4dba-b022-13833bd7277f"
+                                                       :topic "topic1"
+                                                       ;; :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
                                                        :user_name "a0001"
                                                        :meta_tags ["1" "2" "3"]
                                                        :folder "test"}))
