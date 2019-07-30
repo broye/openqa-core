@@ -43,6 +43,7 @@ create table post (
        comments_count integer default 0, -- comments count, applies to questions and answers
        upvote_count integer default 0, -- upvotes
        downvote_count integer default 0, -- downvotes
+       folder varchar(80), -- folder, apply to question only
        create_date timestamp with time zone, -- create date
        last_update timestamp with time zone -- last update
 );

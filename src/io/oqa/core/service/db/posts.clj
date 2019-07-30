@@ -87,7 +87,7 @@
          } post]
     (if (not= error-code :ok) ;;check validate result
       error
-      (if  (= type "q")
+      (if  (or  (= type "q") (= status "i"))
         ;; question... straight forward insert.
         (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
                (let [result (jdbc/insert! conn
@@ -139,3 +139,145 @@
              (catch clojure.lang.ExceptionInfo e (ex-data e))
              (catch Exception e (do (println e) {:error-code :database-error}))
              (catch Throwable e (do (println) e) {:error-code :unkown-error} ))))))
+
+(defn- validate-update-post
+  "validate an update post's fields"
+  [{:keys [status type domain pid qid aid seq_id]}]
+  (cond
+    (not (str/blank? status)) { :error-code :can-not-modify-status}
+    (not (str/blank? type)) { :error-code :can-not-modify-type}
+    (str/blank? pid) { :error-code :pid-must-be-provided}
+    (not (str/blank? qid)) { :error-code :can-not-update-qid}
+    (not (str/blank? aid)) { :error-code :can-not-update-aid}
+    (not (str/blank? seq_id)) { :error-code :can-not-update-seq_id}
+    (str/blank? domain) { :error-code :domain-must-be-provided}
+    :else { :error-code :ok}))
+
+(defn update-post
+  "Update a post fields except changing status and type"
+  [{pid :pid domain :domain :as post}]
+  (let [error (validate-update-post post)]
+    (if (not= (:error-code error) :ok)
+      error
+      (try
+        (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
+              post (-> post
+                       (dissoc :qid
+                               :aid
+                               :pid
+                               :domain
+                               :status
+                               :type
+                               :seq_id
+                               :create_date) ;; remove un-modifiable fields
+                       (assoc :last_update now))
+              count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                      (jdbc/update! conn
+                                    :post
+                                    post
+                                    ["pid = ? And domain = ? " (java.util.UUID/fromString pid) domain]))]
+          (if (= (first count) 1)
+            {:error-code :ok}
+            {:error-code :post-not-found}))
+        (catch Exception e (do (println e) {:error-code :database-error}))
+        (catch Throwable e (do (println e) {:error-code :unknown-error}))))))
+
+
+(defn publish-post
+  "Change a post's status from i to p"
+  [{:keys [pid qid aid domain type] :as post}]
+  (try
+    (if (= type "q")
+      ;; question - change status to 'p' directly
+      (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
+            count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                    (jdbc/update! conn
+                                  :post
+                                  {:status "p" :last_update now} ;; change status only
+                                  ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type]))]
+        (if (= (first count) 1)
+          {:error-code :ok}
+          {:error-code :post-not-found}))
+
+      ;; not question - update parent stat as well
+      (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
+        (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
+              update-result (jdbc/update! conn
+                                          :post
+                                          {:status "p" :last_update now} ;; change status only
+                                          ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type])
+              _ (when (= (first update-result) 0)
+                  (throw (ex-info "Parent post not found" {:error-code :publishi-failed})))
+              parent-update-result (cond
+                                     ;; is answer
+                                     (= type "a") (jdbc/execute! conn
+                                                                 ["update post set answers_count = answers_count + 1 where pid = ?" (java.util.UUID/fromString qid)])
+                                     ;; is comment to question
+                                     (and
+                                      (= type "c")
+                                      (nil? aid)) (jdbc/execute!
+                                                   conn
+                                                   ["update post set comments_count = comments_count + 1 where pid = ?" (java.util.UUID/fromString qid)])
+                                     ;; is comment to answer
+                                     (= type "c") (jdbc/execute!
+                                                   [conn
+                                                    "update post set comments_count = comments_count + 1 where pid = ?" (java.util.UUID/fromString aid)]))
+              _ (when (or (nil? parent-update-result) (empty? parent-update-result))
+                  (throw (ex-info "Parent post not found" {:error-code :publishi-failed})))]
+          {:error-code :ok
+           :data {:last_update now}})))
+    (catch clojure.lang.ExceptionInfo e (do (println e) (ex-data e)))
+    (catch Exception e (do (println e) {:error-code :database-error}))
+    (catch Throwable e (do (println e) {:error-code :unknown-error}))))
+
+(defn mark-post-deleted
+  "Mark post status to seleted but not pysically delete the post. Client must explicitly set fields to blank if necessary"
+  [{pid :pid domain :domain :as post}]
+  (try
+    (println pid domain post)
+    (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
+          post (-> post
+                   (dissoc :qid
+                           :aid
+                           :pid
+                           :domain
+                           :type
+                           :seq_id
+                           :create_date) ;; remove un-modifiable fields
+                   (assoc :last_update now :status "d"))
+          count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                  (jdbc/update! conn
+                                :post
+                                post
+                                ["pid = ? And domain = ? And status != ?" (java.util.UUID/fromString pid) domain "d"]))]
+      (if (= (first count) 1)
+        {:error-code :ok}
+        {:error-code :post-not-found}))
+    (catch Exception e (do (println e) {:error-code :database-error}))
+    (catch Throwable e (do (println e) {:error-code :unknown-error}))))
+
+
+(defn mark-post-revising
+  "Mark post status to revising. Client must explicitly set draft fields"
+  [{pid :pid domain :domain :as post}]
+  (try
+    (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
+          post (-> post
+                   (dissoc :qid
+                           :aid
+                           :pid
+                           :domain
+                           :type
+                           :seq_id
+                           :create_date) ;; remove un-modifiable fields
+                   (assoc :last_update now :status "r"))
+          count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                  (jdbc/update! conn
+                                :post
+                                post
+                                ["pid = ? And domain = ? And status = ?" (java.util.UUID/fromString pid) domain "p"]))]
+      (if (= (first count) 1)
+        {:error-code :ok}
+        {:error-code :post-not-found}))
+    (catch Exception e (do (println e) {:error-code :database-error}))
+    (catch Throwable e (do (println e) {:error-code :unknown-error}))))

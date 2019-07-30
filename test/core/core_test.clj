@@ -22,27 +22,67 @@
 ;;                                                :user_name "a0001"
 ;;                                                :type "q"
 ;;                                                :status "i"
-;;                                                :meta_tags ["1" "2" "3"]}))
+;;                                                :meta_tags ["1" "2" "3"]
+;;                                                :folder "test"}))
+
+;; (println "Update POST test >>>"  (posts/update-post {:title "modified test"
+;;                                                      :draft_title "Draft 2..."
+;;                                                      :domain "default"
+;;                                                      :tags ["a" "b" "c"]
+;;                                                      :uid "a0001"
+;;                                                      :pid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+;;                                                      :user_name "a0001"
+;;                                                      :meta_tags ["1" "2" "3"]
+;;                                                      :folder "test"}))
+
+(println "Publish POST test >>>"  (posts/publish-post {:title "published test"
+                                                       :draft_title "Draft 2..."
+                                                       :domain "default"
+                                                       :type "a"
+                                                       :tags ["a" "b" "c"]
+                                                       :uid "a0001"
+                                                       :pid "2401f558-5073-4bb7-bde1-aa6aeea03abc"
+                                                       :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+                                                       :user_name "a0001"
+                                                       :meta_tags ["1" "2" "3"]
+                                                       :folder "test"}))
+
+;; (println "Mark POST deleted >>>"  (posts/mark-post-deleted {:title ""
+;;                                                             :draft_title "Draft 2..."
+;;                                                             :domain "default"
+;;                                                             :tags ["a" "b" "c"]
+;;                                                             :uid "a0001"
+;;                                                             :pid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+;;                                                             :user_name "a0001"
+;;                                                             :meta_tags ["1" "2" "3"]
+;;                                                             :folder "test"}))
+
+
+;; (println "Mark POST revising >>>"  (posts/mark-post-revising {:title ""
+;;                                                               :draft_title "Draft 2..."
+;;                                                               :domain "default"
+;;                                                               :tags ["a" "b" "c"]
+;;                                                               :uid "a0001"
+;;                                                               :pid "2bef8357-9b81-494f-9140-6fe0865d3a63"
+;;                                                               :user_name "a0001"
+;;                                                               :meta_tags ["1" "2" "3"]
+;;                                                               :folder "test"}))
+
+
 ;; (println "NEW POST test2 >>>"  (posts/new-post {:title "test2" :domain "default" :tags ["a" "b" "c"] :meta_tags ["1" "2" "3"]}))
 
-(println "NEW answer POST test >>>"  (posts/new-post {:title "test"
-                                                      :draft_title "Draft..."
-                                                      :draft_content "Draft reply..."
-                                                      :domain "default"
-                                                      :tags ["a" "b" "c"]
-                                                      :uid "a0001"
-                                                      :user_name "a0001"
-                                                      :type "c"
-                                                      :status "i"
-                                                      :aid "cc3d5176-7ef7-4058-9a53-f342d43dac78"
-                                                      :qid "44404377-4e7b-47b9-9dd9-92dfbf57aafe"
-                                                      :meta_tags ["1" "2" "3"]}))
 
-(deftest build-db-query
-  (testing "build positions."
-    (let [field-values {:a 12 :b "alright" :c nil}
-          result (helpers/build-insert "test_table" field-values "returning pid")]
-      (println (:query-string result) (:tuple result))
-      (is (not (nil? (:query-string result)))))))
+;; (println "NEW answer POST test >>>"  (posts/new-post {:title "test"
+;;                                                       :draft_title "Draft..."
+;;                                                       :draft_content "Draft reply..."
+;;                                                       :domain "default"
+;;                                                       :tags ["a" "b" "c"]
+;;                                                       :uid "a0001"
+;;                                                       :user_name "a0001"
+;;                                                       :type "a"
+;;                                                       :status "i"
+;;                                                       ;; :aid "cc3d5176-7ef7-4058-9a53-f342d43dac78"
+;;                                                       :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
+;;                                                       :meta_tags ["1" "2" "3"]}))
 
 ;; (Thread/sleep 100000)
