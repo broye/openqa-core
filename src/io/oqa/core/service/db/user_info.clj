@@ -15,7 +15,7 @@
 (defn update-user-info
   "Update user name and avartar accross post & vote"
   [{:keys [uid user_name user_avatar domain] :as user_info}]
-  (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+  (try (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
          (let [update-post-result (jdbc/update! conn :post
                                                 (dissoc user_info :uid :domain)
                                                 ["uid = ?" uid])

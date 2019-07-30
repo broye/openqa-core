@@ -4,6 +4,7 @@
             [io.oqa.core.service.db.helpers :as helpers]
             [io.oqa.core.service.db :as db]
             [io.oqa.core.service.db.posts :as posts]
+            [io.oqa.core.service.db.vote :as vote]
             [io.oqa.core.service.db.user-info :as user-info]
             [io.oqa.core.bootstrap.config :as config]))
 
@@ -50,7 +51,11 @@
 ;;                                                        :meta_tags ["1" "2" "3"]
 ;;                                                        :folder "test"}))
 
-(println "Update user infor" (user-info/update-user-info {:uid "a0001" :user_name "User 001" :domain "default"}))
+;; (println "Update user infor" (user-info/update-user-info {:uid "a0001" :user_name "User 001" :domain "default"}))
+
+;; (println "New vote..." (vote/new-vote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
+
+(println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 
 ;; (println "Mark POST deleted >>>"  (posts/mark-post-deleted {:title ""
 ;;                                                             :draft_title "Draft 2..."
