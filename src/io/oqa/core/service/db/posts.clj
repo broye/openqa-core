@@ -319,3 +319,31 @@
         {:error-code :post-not-found}))
     (catch Exception e (do (println e) {:error-code :database-error}))
     (catch Throwable e (do (println e) {:error-code :unknown-error}))))
+
+(defn delete-draft
+  "Delete draft post. Applicable only to post with status 'i' and 'r'"
+  [{:keys [pid status domain]}]
+  (try
+    (cond
+      (= status "i") (let [[delete-result] (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                                             (jdbc/delete! conn
+                                                           :post
+                                                           ["pid = ? And status = ?" (java.util.UUID/fromString pid) status]))]
+                       (if (= delete-result 1)
+                         {:error-code :ok}
+                         {:error-code :post-not-found}))
+      (= status "r") (let [ [update-result] (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+                                              (jdbc/update! conn
+                                                            :post
+                                                            {:draft_title nil
+                                                             :draft_content nil
+                                                             :draft_content_lang nil
+                                                             :draft_content_external nil
+                                                             :status "p"}
+                                                            ["pid = ? And status = ?" (java.util.UUID/fromString pid) status]))]
+                       (if (= update-result 1)
+                         {:error-code :ok}
+                         {:error-code :post-not-found}))
+      :else {:error-code :wrong-type-for-delete})
+    (catch Exception e (do (println e) {:error-code :database-error}))
+    (catch Throwable e (do (println e) {:error-code :unknown-error}))))

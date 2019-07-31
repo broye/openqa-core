@@ -27,20 +27,39 @@
 ;;                                                :type "c"
 ;;                                                :status "p"
 ;;                                                :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
-;;                                                ;; :aid "4276d47a-a1e6-4188-9bd0-5cc9cd0c73a5"
+;;                                                ;; :aid ""
+;;                                                :reply_to_uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979"
+;;                                                :reply_to_user_name "haha"
+;;                                                :reply_to_user_avatar "blala"
 ;;                                                :meta_tags ["1" "2" "3"]
 ;;                                                :folder "test"}))
 
-(println "Update POST test >>>"  (posts/update-post {:title "modified test"
-                                                     :draft_title "Draft 2..."
-                                                     :domain "default"
-                                                     :tags ["a" "b" "c"]
-                                                     :uid "a0001"
-                                                     :pid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
-                                                     :user_name "a0001"
-                                                     :type "q"
-                                                     :meta_tags ["1" "2" "3"]
-                                                     :folder "test"}))
+;; (println "Delete draft post >>>"  (posts/delete-draft {:title "test"
+;;                                                        :content "alright"
+;;                                                        :draft_title "Draft..."
+;;                                                        :domain "default"
+;;                                                        :topic "topic1"
+;;                                                        :tags ["a" "b" "c"]
+;;                                                        :uid "a0001"
+;;                                                        :user_name "a0001"
+;;                                                        :type "a"
+;;                                                        :status "r"
+;;                                                        :pid "79cd2a27-1cae-41f2-a18c-6aacc3e61b0b"
+;;                                                        ;; :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
+;;                                                        ;; :aid "4276d47a-a1e6-4188-9bd0-5cc9cd0c73a5"
+;;                                                        :meta_tags ["1" "2" "3"]
+;;                                                        :folder "test"}))
+
+;; ;; (println "Update POST test >>>"  (posts/update-post {:title "modified test"
+;;                                                      :draft_title "Draft 2..."
+;;                                                      :domain "default"
+;;                                                      :tags ["a" "b" "c"]
+;;                                                      :uid "a0001"
+;;                                                      :pid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
+;;                                                      :user_name "a0001"
+;;                                                      :type "q"
+;;                                                      :meta_tags ["1" "2" "3"]
+;;                                                      :folder "test"}))
 
 ;; (println "Publish POST test >>>"  (posts/publish-post {:title "published test"
 ;;                                                        :draft_title "Draft 2..."
@@ -48,14 +67,14 @@
 ;;                                                        :type "q"
 ;;                                                        :tags ["a" "b" "c"]
 ;;                                                        :uid "a0001"
-;;                                                        :pid "3571d1b2-b8f8-4dba-b022-13833bd7277f"
+;;                                                        :pid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
 ;;                                                        :topic "topic1"
 ;;                                                        ;; :qid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
 ;;                                                        :user_name "a0001"
 ;;                                                        :meta_tags ["1" "2" "3"]
 ;;                                                        :folder "test"}))
 
-;; (println "Update user infor" (user-info/update-user-info {:uid "a0001" :user_name "User 001" :domain "default"}))
+(println "Update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "User --- ddd" :domain "default"}))
 
 ;; (println "New vote..." (vote/new-vote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 
@@ -72,12 +91,15 @@
 ;;                                                             :folder "test"}))
 
 
+
+
+
 ;; (println "Mark POST revising >>>"  (posts/mark-post-revising {:title ""
 ;;                                                               :draft_title "Draft 2..."
 ;;                                                               :domain "default"
 ;;                                                               :tags ["a" "b" "c"]
 ;;                                                               :uid "a0001"
-;;                                                               :pid "2bef8357-9b81-494f-9140-6fe0865d3a63"
+;;                                                               :pid "79cd2a27-1cae-41f2-a18c-6aacc3e61b0b"
 ;;                                                               :user_name "a0001"
 ;;                                                               :meta_tags ["1" "2" "3"]
 ;;                                                               :folder "test"}))

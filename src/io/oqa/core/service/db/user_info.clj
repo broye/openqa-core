@@ -21,7 +21,13 @@
                                                 ["uid = ?" uid])
                update-vote-result (jdbc/update! conn :vote
                                                 (dissoc user_info :uid :domain)
-                                                ["uid = ?" uid])]
+                                                ["uid = ?" uid])
+               update-reply-to-result (jdbc/update! conn :post
+                                                    (-> (dissoc user_info :uid :domain :user_name :user_avatar)
+                                                        (assoc :reply_to_user_name user_name
+                                                               :reply_to_user_avatar user_avatar))
+                                                    ["reply_to_uid = ?" uid])
+               ]
            {:error-code :ok}))
        (catch Exception e (do (println e) {:error-code :database-error}))
        (catch Throwable e (do (println e) {:error-code :unkown-error}))))
