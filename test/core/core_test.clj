@@ -16,30 +16,31 @@
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
 
-(println "NEW POST test >>>"  (posts/new-post {:title "test"
-                                               :content "alright"
-                                               :draft_title "Draft..."
-                                               :domain "default"
-                                               :topic "topic1"
-                                               :tags ["a" "b" "c"]
-                                               :uid "a0001"
-                                               :user_name "a0001"
-                                               :type "c"
-                                               :status "p"
-                                               :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
-                                               ;; :aid "4276d47a-a1e6-4188-9bd0-5cc9cd0c73a5"
-                                               :meta_tags ["1" "2" "3"]
-                                               :folder "test"}))
+;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
+;;                                                :content "alright"
+;;                                                :draft_title "Draft..."
+;;                                                :domain "default"
+;;                                                :topic "topic1"
+;;                                                :tags ["a" "b" "c"]
+;;                                                :uid "a0001"
+;;                                                :user_name "a0001"
+;;                                                :type "c"
+;;                                                :status "p"
+;;                                                :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
+;;                                                ;; :aid "4276d47a-a1e6-4188-9bd0-5cc9cd0c73a5"
+;;                                                :meta_tags ["1" "2" "3"]
+;;                                                :folder "test"}))
 
-;; (println "Update POST test >>>"  (posts/update-post {:title "modified test"
-;;                                                      :draft_title "Draft 2..."
-;;                                                      :domain "default"
-;;                                                      :tags ["a" "b" "c"]
-;;                                                      :uid "a0001"
-;;                                                      :pid "d37ab549-6cff-4fa1-8d6a-9d3d0268c167"
-;;                                                      :user_name "a0001"
-;;                                                      :meta_tags ["1" "2" "3"]
-;;                                                      :folder "test"}))
+(println "Update POST test >>>"  (posts/update-post {:title "modified test"
+                                                     :draft_title "Draft 2..."
+                                                     :domain "default"
+                                                     :tags ["a" "b" "c"]
+                                                     :uid "a0001"
+                                                     :pid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
+                                                     :user_name "a0001"
+                                                     :type "q"
+                                                     :meta_tags ["1" "2" "3"]
+                                                     :folder "test"}))
 
 ;; (println "Publish POST test >>>"  (posts/publish-post {:title "published test"
 ;;                                                        :draft_title "Draft 2..."

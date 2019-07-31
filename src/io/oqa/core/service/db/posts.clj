@@ -166,7 +166,6 @@
   [{:keys [status type domain pid qid aid seq_id]}]
   (cond
     (not (str/blank? status)) { :error-code :can-not-modify-status}
-    (not (str/blank? type)) { :error-code :can-not-modify-type}
     (str/blank? pid) { :error-code :pid-must-be-provided}
     (not (str/blank? qid)) { :error-code :can-not-update-qid}
     (not (str/blank? aid)) { :error-code :can-not-update-aid}
@@ -176,7 +175,7 @@
 
 (defn update-post
   "Update a post fields except changing status and type"
-  [{pid :pid domain :domain :as post}]
+  [{:keys [pid domain type] :as post}]
   (let [error (validate-update-post post)]
     (if (not= (:error-code error) :ok)
       error
@@ -192,11 +191,16 @@
                                :seq_id
                                :create_date) ;; remove un-modifiable fields
                        (assoc :last_update now :last_active now))
-              count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
+              count (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
                       (jdbc/update! conn
                                     :post
                                     post
-                                    ["pid = ? And domain = ? " (java.util.UUID/fromString pid) domain]))]
+                                    ["type = ? And pid = ? And domain = ? " type (java.util.UUID/fromString pid) domain])
+                      (when (and (= type "q") (not (str/blank? (:title post))))
+                        (jdbc/update! conn
+                                      :post
+                                      {:title (:title post)}
+                                      ["qid = ? And domain = ? " (java.util.UUID/fromString pid) domain])))]
           (if (= (first count) 1)
             {:error-code :ok}
             {:error-code :post-not-found}))
