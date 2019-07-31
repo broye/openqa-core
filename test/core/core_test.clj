@@ -16,17 +16,20 @@
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
 
-;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
-;;                                                :draft_title "Draft..."
-;;                                                :domain "default"
-;;                                                :topic "topic1"
-;;                                                :tags ["a" "b" "c"]
-;;                                                :uid "a0001"
-;;                                                :user_name "a0001"
-;;                                                :type "q"
-;;                                                :status "i"
-;;                                                :meta_tags ["1" "2" "3"]
-;;                                                :folder "test"}))
+(println "NEW POST test >>>"  (posts/new-post {:title "test"
+                                               :content "alright"
+                                               :draft_title "Draft..."
+                                               :domain "default"
+                                               :topic "topic1"
+                                               :tags ["a" "b" "c"]
+                                               :uid "a0001"
+                                               :user_name "a0001"
+                                               :type "c"
+                                               :status "p"
+                                               :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
+                                               ;; :aid "4276d47a-a1e6-4188-9bd0-5cc9cd0c73a5"
+                                               :meta_tags ["1" "2" "3"]
+                                               :folder "test"}))
 
 ;; (println "Update POST test >>>"  (posts/update-post {:title "modified test"
 ;;                                                      :draft_title "Draft 2..."
@@ -55,7 +58,7 @@
 
 ;; (println "New vote..." (vote/new-vote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 
-(println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
+;; (println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 
 ;; (println "Mark POST deleted >>>"  (posts/mark-post-deleted {:title ""
 ;;                                                             :draft_title "Draft 2..."

@@ -78,6 +78,7 @@
         post (-> post
                  (assoc :create_date now
                         :last_update now
+                        :last_active now
                         :qid (if qid (java.util.UUID/fromString qid) qid)
                         :aid (if aid (java.util.UUID/fromString aid) aid)
                         :pid (if pid (java.util.UUID/fromString pid) (java.util.UUID/randomUUID)))
@@ -107,11 +108,11 @@
 
         ;; answer or comment... update parent count
         (try (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
-               (let [insert-result (jdbc/insert! conn
+               (let [insert-result (jdbc/insert! conn          ;; insert post
                                                  :post
                                                  post
                                                  :return-keys ["pid" "seq_id"])
-                     update-result (cond
+                     update-result (cond  ;; update stats
                                      ;; is question
                                      (= type "q") (let [_ (println "starting insert...")
                                                         result (jdbc/execute! conn
@@ -132,19 +133,20 @@
 
                                      ;; is answer
                                      (= type "a") (jdbc/execute! conn
-                                                                 ["update post set answers_count = answers_count + 1 where pid = ?" qid])
+                                                                 ["update post set answers_count = answers_count + 1, last_active = ? where pid = ?" now qid])
                                      ;; is comment to question
                                      (and
                                       (= type "c")
                                       (nil? aid)) (jdbc/execute!
                                                    conn
-                                                   ["update post set comments_count = comments_count + 1 where pid = ?" qid])
+                                                   ["update post set comments_count = comments_count + 1 , last_active = ? where pid = ?" now qid])
                                      ;; is comment to answer
-                                     (= type "c") (jdbc/execute!
-                                                   conn
-                                                   ["update post set comments_count = comments_count + 1 where pid = ?" aid])
-                                     )
-                     _ (println "update result" update-result)]
+                                     (= type "c") (do (jdbc/execute! ;; update parent answer last active
+                                                       conn
+                                                       ["update post set comments_count = comments_count + 1, last_active = ? where pid = ?" now aid])
+                                                      (jdbc/execute! ;; update parent question last active
+                                                       conn
+                                                       ["update post set last_active = ? where pid = ?" now qid])))]
                  (let [[count] update-result]
                    (when (= count 0)
                      (throw (ex-info "Parent post not found" {:error-code :parent-not-found}))))
@@ -189,7 +191,7 @@
                                :type
                                :seq_id
                                :create_date) ;; remove un-modifiable fields
-                       (assoc :last_update now))
+                       (assoc :last_update now :last_active now))
               count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
                       (jdbc/update! conn
                                     :post
@@ -201,7 +203,6 @@
         (catch Exception e (do (println e) {:error-code :database-error}))
         (catch Throwable e (do (println e) {:error-code :unknown-error}))))))
 
-
 (defn publish-post
   "Change a post's status from i to p"
   [{:keys [pid qid aid domain type topic] :as post}]
@@ -212,7 +213,7 @@
             _ (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
                 (let [[count] (jdbc/update! conn
                                             :post
-                                            {:status "p" :last_update now} ;; change status only
+                                            {:status "p" :last_update now :last_active now} ;; change status only
                                             ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type])]
                   (if (not= count 1) ;; change status error
                     (throw (ex-info "Publish post not found" {:error-code :publish-failed}))
@@ -237,24 +238,24 @@
         (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
               update-result (jdbc/update! conn
                                           :post
-                                          {:status "p" :last_update now} ;; change status only
+                                          {:status "p" :last_update now :last_active now} ;; change status only
                                           ["pid = ? And domain = ? And status = ? And type = ?" (java.util.UUID/fromString pid) domain "i" type])
               _ (when (= (first update-result) 0)
                   (throw (ex-info "Parent post not found" {:error-code :publishi-failed})))
               parent-update-result (cond
                                      ;; is answer
                                      (= type "a") (jdbc/execute! conn
-                                                                 ["update post set answers_count = answers_count + 1 where pid = ?" (java.util.UUID/fromString qid)])
+                                                                 ["update post set answers_count = answers_count + 1, last_active = ? where pid = ?" now (java.util.UUID/fromString qid)])
                                      ;; is comment to question
                                      (and
                                       (= type "c")
                                       (nil? aid)) (jdbc/execute!
                                                    conn
-                                                   ["update post set comments_count = comments_count + 1 where pid = ?" (java.util.UUID/fromString qid)])
+                                                   ["update post set comments_count = comments_count + 1, last_active = ? where pid = ?" now (java.util.UUID/fromString qid)])
                                      ;; is comment to answer
                                      (= type "c") (jdbc/execute!
                                                    [conn
-                                                    "update post set comments_count = comments_count + 1 where pid = ?" (java.util.UUID/fromString aid)]))
+                                                    "update post set comments_count = comments_count + 1 , last_active = ? where pid = ?" now (java.util.UUID/fromString aid)]))
               _ (when (or (nil? parent-update-result) (empty? parent-update-result))
                   (throw (ex-info "Parent post not found" {:error-code :publishi-failed})))]
           {:error-code :ok
