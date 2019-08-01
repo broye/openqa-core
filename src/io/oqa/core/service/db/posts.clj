@@ -133,20 +133,20 @@
 
                                      ;; is answer
                                      (= type "a") (jdbc/execute! conn
-                                                                 ["update post set answers_count = answers_count + 1, last_active = ? where pid = ?" now qid])
+                                                                 ["update post set answers_count = answers_count + 1, last_active = ?, last_active_seq = nextval('post_last_active_seq_seq')  where pid = ?" now qid])
                                      ;; is comment to question
                                      (and
                                       (= type "c")
                                       (nil? aid)) (jdbc/execute!
                                                    conn
-                                                   ["update post set comments_count = comments_count + 1 , last_active = ? where pid = ?" now qid])
+                                                   ["update post set comments_count = comments_count + 1 , last_active = ?, last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now qid])
                                      ;; is comment to answer
                                      (= type "c") (do (jdbc/execute! ;; update parent answer last active
                                                        conn
-                                                       ["update post set comments_count = comments_count + 1, last_active = ? where pid = ?" now aid])
+                                                       ["update post set comments_count = comments_count + 1, last_active = ?, last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now aid])
                                                       (jdbc/execute! ;; update parent question last active
                                                        conn
-                                                       ["update post set last_active = ? where pid = ?" now qid])))]
+                                                       ["update post set last_active = ?, last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now qid])))]
                  (let [[count] update-result]
                    (when (= count 0)
                      (throw (ex-info "Parent post not found" {:error-code :parent-not-found}))))
@@ -249,17 +249,17 @@
               parent-update-result (cond
                                      ;; is answer
                                      (= type "a") (jdbc/execute! conn
-                                                                 ["update post set answers_count = answers_count + 1, last_active = ? where pid = ?" now (java.util.UUID/fromString qid)])
+                                                                 ["update post set answers_count = answers_count + 1, last_active = ? , last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now (java.util.UUID/fromString qid)])
                                      ;; is comment to question
                                      (and
                                       (= type "c")
                                       (nil? aid)) (jdbc/execute!
                                                    conn
-                                                   ["update post set comments_count = comments_count + 1, last_active = ? where pid = ?" now (java.util.UUID/fromString qid)])
+                                                   ["update post set comments_count = comments_count + 1, last_active = ? , last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now (java.util.UUID/fromString qid)])
                                      ;; is comment to answer
                                      (= type "c") (jdbc/execute!
                                                    [conn
-                                                    "update post set comments_count = comments_count + 1 , last_active = ? where pid = ?" now (java.util.UUID/fromString aid)]))
+                                                    "update post set comments_count = comments_count + 1 , last_active = ? , last_active_seq = nextval('post_last_active_seq_seq') where pid = ?" now (java.util.UUID/fromString aid)]))
               _ (when (or (nil? parent-update-result) (empty? parent-update-result))
                   (throw (ex-info "Parent post not found" {:error-code :publishi-failed})))]
           {:error-code :ok

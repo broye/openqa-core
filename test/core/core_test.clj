@@ -16,23 +16,23 @@
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
 
-;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
-;;                                                :content "alright"
-;;                                                :draft_title "Draft..."
-;;                                                :domain "default"
-;;                                                :topic "topic1"
-;;                                                :tags ["a" "b" "c"]
-;;                                                :uid "a0001"
-;;                                                :user_name "a0001"
-;;                                                :type "c"
-;;                                                :status "p"
-;;                                                :qid "0e6050d3-b22c-43d3-bd4c-2029a0fa6a26"
-;;                                                ;; :aid ""
-;;                                                :reply_to_uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979"
-;;                                                :reply_to_user_name "haha"
-;;                                                :reply_to_user_avatar "blala"
-;;                                                :meta_tags ["1" "2" "3"]
-;;                                                :folder "test"}))
+(println "NEW POST test >>>"  (posts/new-post {:title "test"
+                                               :content "alright"
+                                               :draft_title "Draft..."
+                                               :domain "default"
+                                               :topic "topic1"
+                                               :tags ["a" "b" "c"]
+                                               :uid "a0001"
+                                               :user_name "a0001"
+                                               :type "c"
+                                               :status "p"
+                                               :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
+                                               :aid "b3927052-adf5-4bd6-8125-c3174611239b"
+                                               :reply_to_uid "a002"
+                                               :reply_to_user_name "haha"
+                                               :reply_to_user_avatar "blala"
+                                               :meta_tags ["1" "2" "3"]
+                                               :folder "test"}))
 
 ;; (println "Delete draft post >>>"  (posts/delete-draft {:title "test"
 ;;                                                        :content "alright"
@@ -74,7 +74,7 @@
 ;;                                                        :meta_tags ["1" "2" "3"]
 ;;                                                        :folder "test"}))
 
-(println "Update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "User --- ddd" :domain "default"}))
+;; (println "Update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "User --- ddd" :domain "default"}))
 
 ;; (println "New vote..." (vote/new-vote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 

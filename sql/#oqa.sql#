@@ -31,6 +31,7 @@ create table post (
        draft_title text, -- draft title
        folder varchar(80), -- folder, apply to question only
        last_active timestamp with time zone, -- last active, i.e. any new or update itself or subposts
+       last_active_seq serial, -- serial number representing sequence of last update, larger newer.
        last_update timestamp with time zone, -- last update
        meta_tags varchar(80) [], -- meta tags, for non-functional use
        pid UUID primary key, -- post id
