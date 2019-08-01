@@ -73,8 +73,7 @@
                                         (jdbc/execute! conn
                                                        ["update post set upvote_count = upvote_count - 1 where pid = ?" pid-uuid])
                                         (jdbc/execute! conn
-                                                       ["update post set downvote_count = downvote_count - 1 where pid = ?" pid-uuid]))
-                   ]
+                                                       ["update post set downvote_count = downvote_count - 1 where pid = ?" pid-uuid]))]
                (if (= (first update-post-result) 1)
                  {:error-code :ok}
                  (throw (ex-info "New vote error" {:error-code :unvote-failed})))))

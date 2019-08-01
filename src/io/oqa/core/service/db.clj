@@ -25,7 +25,11 @@
                            :server-name  (or host "localhost")
                            :port-number  (or port  5432)
                            :register-mbeans    false})
-  (delay (make-datasource datasource-options)))
+  ;; (delay (make-datasource datasource-options)))
+  (let [db (delay (make-datasource datasource-options))]
+    (jdbc/with-db-connection [conn {:datasource @db}]
+      (jdbc/execute! conn ["set transform_null_equals to on"]))
+    db))
 
 (defn init-db-service
   "Initiate db services for all postgresql db opertions"
@@ -41,8 +45,9 @@
      (alter domain-to-connection assoc (Default :domain) defaultShardPool))
     (println "building domain to client mapping")
     (jdbc/with-db-connection [conn {:datasource @defaultShardPool}]
-      (let [result (jdbc/query conn "select domain, shard from domain_shard")]
-        (println "domin shard fetched " result)
+      (let [
+            result (jdbc/query conn "select domain, shard from domain_shard")]
+        (println   "domin shard fetched " result)
         (doseq [{:keys [domain shard]} result]
           (let [shardConfig ((keyword shard) Shards)]
             (println shardConfig)

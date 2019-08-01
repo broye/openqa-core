@@ -7,8 +7,9 @@
            (java.util UUID))
 
   (:require [io.oqa.core.service.db :refer [domain-to-connection]]
-            [io.oqa.core.service.db.helpers :as helpers]
             [clj-postgresql.core :as pg]
+            [honeysql.core :as sql]
+            [honeysql.helpers :refer :all :as helpers]
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as str]))
 
@@ -63,6 +64,7 @@
             draft_content
             draft_content_lang
             domain
+            folder
             topic
             type
             qid
@@ -114,16 +116,20 @@
                                                  :return-keys ["pid" "seq_id"])
                      update-result (cond  ;; update stats
                                      ;; is question
-                                     (= type "q") (let [_ (println "starting insert...")
+                                     (= type "q") (let [sql-command (sql/format {:update :stats
+                                                                                 :set {:question_count (sql/call :+ :question_count 1)}
+                                                                                 :where [:and [:= :domain domain] [:= :topic topic] [:= :folder folder]]})
+                                                        _ (println sql-command)
                                                         result (jdbc/execute! conn
-                                                                              ["update stats set question_count = question_count + 1 where domain = ? And topic = ? " domain topic])]
-                                                    (println "inser --- " result)
+                                                                              sql-command)]
+                                                    (println "update stats ..." result domain topic folder)
                                                     (if (= (first result) 1)
                                                       result
                                                       (let [result (jdbc/insert! conn
                                                                                  :stats
                                                                                  {:domain domain
                                                                                   :topic topic
+                                                                                  :folder folder
                                                                                   :question_count 1}
                                                                                  :return-keys ["pid"]
                                                                                  )]
@@ -175,7 +181,7 @@
 
 (defn update-post
   "Update a post fields except changing status and type"
-  [{:keys [pid domain type] :as post}]
+  [{:keys [pid domain type folder] :as post}]
   (let [error (validate-update-post post)]
     (if (not= (:error-code error) :ok)
       error
@@ -209,7 +215,7 @@
 
 (defn publish-post
   "Change a post's status from i to p"
-  [{:keys [pid qid aid domain type topic] :as post}]
+  [{:keys [pid qid aid domain type folder topic] :as post}]
   (try
     (if (= type "q")
       ;; question - change status to 'p' directly
@@ -222,13 +228,16 @@
                   (if (not= count 1) ;; change status error
                     (throw (ex-info "Publish post not found" {:error-code :publish-failed}))
                     (let [result (jdbc/execute! conn
-                                                ["update stats set question_count = question_count + 1 where domain = ? And topic = ? " domain topic])]
+                                                (sql/format {:update :stats
+                                                             :set {:question_count (sql/call :+ :question_count 1)}
+                                                             :where [:and [:= :domain domain] [:= :topic topic] [:= :folder folder]]}))]
                       (if (= (first result) 1)
                         result
                         (let [result (jdbc/insert! conn
                                                    :stats
                                                    {:domain domain
                                                     :topic topic
+                                                    :folder folder
                                                     :question_count 1}
                                                    :return-keys ["pid"]
                                                    )]

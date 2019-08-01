@@ -24,10 +24,10 @@
                                                :tags ["a" "b" "c"]
                                                :uid "a0001"
                                                :user_name "a0001"
-                                               :type "c"
+                                               :type "q"
                                                :status "p"
-                                               :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
-                                               :aid "b3927052-adf5-4bd6-8125-c3174611239b"
+                                               ;; :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
+                                               ;; :aid "b3927052-adf5-4bd6-8125-c3174611239b"
                                                :reply_to_uid "a002"
                                                :reply_to_user_name "haha"
                                                :reply_to_user_avatar "blala"

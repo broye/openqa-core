@@ -26,7 +26,7 @@ Shards:
   oqa2: # shard name as key to shard db config
     host: 127.0.0.1 # postgresql first shard host
     port: 5433 # postgresql first shard port
-    user: oqa2 # username
+    user: oqa # username
     password: Oqa235813 # password
     db: oqa # database name
     poolSize: 20 # connection pool size.

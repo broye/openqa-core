@@ -9,6 +9,7 @@
                  [hikari-cp "2.8.0"]
                  [io.vertx/vertx-core "3.8.0"]
                  [io.forward/yaml "1.0.9"]
+                 [honeysql "0.9.4"]
                  [io.vertx/vertx-rx-java2 "3.8.0"]
                  [io.vertx/vertx-sql-common "3.8.0"]
                  [io.vertx/vertx-sql-client "3.8.0"]
