@@ -5,6 +5,7 @@
             [io.oqa.core.service.db :as db]
             [io.oqa.core.service.db.posts :as posts]
             [io.oqa.core.service.db.vote :as vote]
+            [io.oqa.core.service.db.query :as query]
             [io.oqa.core.service.db.user-info :as user-info]
             [io.oqa.core.bootstrap.config :as config]))
 
@@ -16,27 +17,27 @@
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
 
-(println "NEW POST test >>>"  (posts/new-post {:title "test"
-                                               :content "alright"
-                                               :draft_title "Draft..."
-                                               :domain "default"
-                                               :topic "topic1"
-                                               :tags ["a" "b" "c"]
-                                               :uid "a0001"
-                                               :user_name "a0001"
-                                               :type "q"
-                                               :status "p"
-                                               ;; :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
-                                               ;; :aid "b3927052-adf5-4bd6-8125-c3174611239b"
-                                               :reply_to_uid "a002"
-                                               :reply_to_user_name "haha"
-                                               :reply_to_user_avatar "blala"
-                                               :meta_tags ["1" "2" "3"]
-                                               :folder "test"}))
+;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
+;;                                                :content "alright"
+;;                                                :draft_title "Draft..."
+;;                                                :domain "default"
+;;                                                :topic "topic1"
+;;                                                :tags ["a" "b" "c"]
+;;                                                :uid "a0001"
+;;                                                :user_name "a0001"
+;;                                                :type "q"
+;;                                                :status "p"
+;;                                                ;; :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
+;;                                                ;; :aid "b3927052-adf5-4bd6-8125-c3174611239b"
+;;                                                :reply_to_uid "a002"
+;;                                                :reply_to_user_name "haha"
+;;                                                :reply_to_user_avatar "blala"
+;;                                                :meta_tags ["1" "2" "3"]
+;;                                                :folder "test"}))
 
-;; (println "Delete draft post >>>"  (posts/delete-draft {:title "test"
+;; (println "delete draft post >>>"  (posts/delete-draft {:title "test"
 ;;                                                        :content "alright"
-;;                                                        :draft_title "Draft..."
+;;                                                        :draft_title "draft..."
 ;;                                                        :domain "default"
 ;;                                                        :topic "topic1"
 ;;                                                        :tags ["a" "b" "c"]
@@ -50,8 +51,8 @@
 ;;                                                        :meta_tags ["1" "2" "3"]
 ;;                                                        :folder "test"}))
 
-;; ;; (println "Update POST test >>>"  (posts/update-post {:title "modified test"
-;;                                                      :draft_title "Draft 2..."
+;; ;; (println "update post test >>>"  (posts/update-post {:title "modified test"
+;;                                                      :draft_title "draft 2..."
 ;;                                                      :domain "default"
 ;;                                                      :tags ["a" "b" "c"]
 ;;                                                      :uid "a0001"
@@ -61,8 +62,8 @@
 ;;                                                      :meta_tags ["1" "2" "3"]
 ;;                                                      :folder "test"}))
 
-;; (println "Publish POST test >>>"  (posts/publish-post {:title "published test"
-;;                                                        :draft_title "Draft 2..."
+;; (println "publish post test >>>"  (posts/publish-post {:title "published test"
+;;                                                        :draft_title "draft 2..."
 ;;                                                        :domain "default"
 ;;                                                        :type "q"
 ;;                                                        :tags ["a" "b" "c"]
@@ -74,9 +75,17 @@
 ;;                                                        :meta_tags ["1" "2" "3"]
 ;;                                                        :folder "test"}))
 
-;; (println "Update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "User --- ddd" :domain "default"}))
+;; (println "update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "user --- ddd" :domain "default"}))
 
-;; (println "New vote..." (vote/new-vote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
+;; (doseq [ i (range 0 100)]
+;; (println "New vote..." (vote/new-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d" :uid (format  "a00%d" i) :type "d" :domain "default"})))
+
+
+(println "query vote" (query/query-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d"
+                                         :domain "default"
+                                         :from_seq 50
+                                         ;; :uid "a001"
+                                         :size 10}))
 
 ;; (println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 
