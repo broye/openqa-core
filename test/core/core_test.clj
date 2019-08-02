@@ -20,22 +20,23 @@
 ;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
 ;;                                                :content "alright"
 ;;                                                :draft_title "Draft..."
+;;                                                :draft_content "Draft content..."
 ;;                                                :domain "default"
-;;                                                :topic "topic1"
+;;                                                :topic "topic2"
 ;;                                                :tags ["a" "b" "c"]
 ;;                                                :uid "a0001"
 ;;                                                :user_name "a0001"
 ;;                                                :type "q"
 ;;                                                :status "p"
-;;                                                ;; :qid "07d3cb08-e78c-41ac-81e2-5cbc3b14179d"
+;;                                                ;; :qid "c2e12091-6d66-428e-a83d-e94bce68a470"
 ;;                                                ;; :aid "b3927052-adf5-4bd6-8125-c3174611239b"
 ;;                                                :reply_to_uid "a002"
 ;;                                                :reply_to_user_name "haha"
 ;;                                                :reply_to_user_avatar "blala"
-;;                                                :meta_tags ["1" "2" "3"]
-;;                                                :folder "test"}))
+;;                                                :meta_tags ["1" "2" "3" "a-meta-tag"]
+;;                                                :folder "test2"}))
 
-;; (println "delete draft post >>>"  (posts/delete-draft {:title "test"
+;; ;; (println "delete draft post >>>"  (posts/delete-draft {:title "test"
 ;;                                                        :content "alright"
 ;;                                                        :draft_title "draft..."
 ;;                                                        :domain "default"
@@ -81,11 +82,35 @@
 ;; (println "New vote..." (vote/new-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d" :uid (format  "a00%d" i) :type "d" :domain "default"})))
 
 
-(println "query vote" (query/query-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d"
-                                         :domain "default"
-                                         :from_seq 50
-                                         ;; :uid "a001"
-                                         :size 10}))
+;; (println "query vote" (query/query-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d"
+;;                                          :domain "default"
+;;                                          :from_seq 50
+;;                                          ;; :uid "a001"
+;;                                          :size 10}))
+
+;; (println "query post" (query/query-post {
+;;                                          :domain "default"
+;;                                          :size 5
+;;                                          :fields [:last_active_seq]
+;;                                          :uid "a0001"
+;;                                          :type "q"
+;;                                          :order_by :seq_id
+;;                                          ;; :status "i"
+;;                                          ;; :from_last_active_seq 30
+;;                                          ;; :tag "a-tag"
+;;                                          :meta-tag "a-meta-tag"
+;;                                          ;; :order_by :seq_id
+;;                                          :pid "71f4e27a-7612-4c20-893f-6694c39919c4"
+;;                                          }
+;;                                         ))
+
+(println "query stats" (query/query-stats {
+                                           :domain "default"
+                                           :size 5
+                                           :topic "topic1"
+                                           :folder "folder2"
+                                           }
+                                          ))
 
 ;; (println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 

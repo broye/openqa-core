@@ -52,6 +52,7 @@ create table post (
 );
 
 create table stats (
+       seq_id serial, -- sequence id
        domain varchar(80), -- domain
        topic varchar(80), -- topic
        folder varchar(80), -- folder
