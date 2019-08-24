@@ -33,7 +33,7 @@
 
 (defn init-db-service
   "Initiate db services for all postgresql db opertions"
-  [Default Shards]
+  [Default Shards vertx]
   (when-not (and (not (nil? Default)) (:domain Default) (:shard Default))
     (throw (new Exception "Config entry 'Default' with both keys domain and shard must be defined")))
   (println "Initating db services...")

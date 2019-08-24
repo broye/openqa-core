@@ -10,9 +10,13 @@ REST:
     - host: localhost # host, ip v4
       port: 8081 #port
 
+# Section 2 - Default domain and shard
+
 Default: # default domain and corresponding shard. Must be set
   domain: default  # default domain if domain not provided in data actions
   shard: default  # default shard
+
+# Section 3 - Shards configuration
 
 Shards:
   default: # shard name as key to shard db config
