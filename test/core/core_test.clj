@@ -3,6 +3,7 @@
   (:require [clojure.test :refer :all]
             [io.oqa.core.service.db.helpers :as helpers]
             [io.oqa.core.service.db :as db]
+            [io.oqa.core.service.db.domain :as domain]
             [io.oqa.core.service.db.posts :as posts]
             [io.oqa.core.service.db.vote :as vote]
             [io.oqa.core.service.db.query :as query]
@@ -13,15 +14,34 @@
 
 (def config (config/load-config config-file))
 
+(println "Shards are ---" (into {} (:Shards config)))
+
 (let [vertx (Vertx/vertx)
       {:keys [REST Default Shards]} config]
   (db/init-db-service Default Shards))
+
+;; (println "New domain test >>>" (domain/new-domain {:domain "emails"
+;;                                                    :shard "oqa2"
+;;                                                    :description "hello"
+;;                                                    }
+;;                                                   "default"
+;;                                                   (:Shards config)))
+
+;; (println "Update domain test >>>" (domain/update-domain {:domain "default"
+;;                                                          :shard "oqa2"
+;;                                                          :description "hello2 **"
+;;                                                          }
+;;                                                         "default"
+;;                                                         (:Shards config)))
+
+(println "Delete domain test >>>" (domain/delete-domain "emails"
+                                                        "default"))
 
 ;; (println "NEW POST test >>>"  (posts/new-post {:title "test"
 ;;                                                :content "alright"
 ;;                                                :draft_title "Draft..."
 ;;                                                :draft_content "Draft content..."
-;;                                                :domain "default"
+;;                                                :domain "oqa2"
 ;;                                                :topic "topic2"
 ;;                                                :tags ["a" "b" "c"]
 ;;                                                :uid "a0001"
@@ -79,7 +99,7 @@
 ;; (println "update user infor" (user-info/update-user-info {:uid "b3c0e5c9-292f-42f6-aaa5-a0002bc5d979" :user_name "user --- ddd" :domain "default"}))
 
 ;; (doseq [ i (range 0 100)]
-;; (println "New vote..." (vote/new-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d" :uid (format  "a00%d" i) :type "d" :domain "default"})))
+;;   (println "New vote..." (vote/new-vote {:pid "03af48de-cdb3-44b1-b5ab-2c623d5ec208" :uid (format  "a00%d" i) :type "d" :domain "default"})))
 
 
 ;; (println "query vote" (query/query-vote {:pid "dcbe9f4c-ddc2-4170-b3bb-fa588f83157d"
@@ -104,13 +124,13 @@
 ;;                                          }
 ;;                                         ))
 
-(println "query stats" (query/query-stats {
-                                           :domain "default"
-                                           :size 5
-                                           :topic "topic1"
-                                           :folder "folder2"
-                                           }
-                                          ))
+;; (println "query stats" (query/query-stats {
+;;                                            :domain "default"
+;;                                            :size 5
+;;                                            :topic "topic1"
+;;                                            :folder "folder2"
+;;                                            }
+;;                                           ))
 
 ;; (println "Un vote..." (vote/unvote {:pid "013d116a-53a7-49c1-84a5-71fad93a5800" :uid "a001" :type "d" :domain "default"}))
 

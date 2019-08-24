@@ -48,7 +48,7 @@
                            (throw (ex-info "Parent post not found" {:error-code :parent-not-found})))
                        new-vote-result (jdbc/insert! conn
                                                      :vote
-                                                     (conj (dissoc vote :domain) {:last_update now :pid pid-uuid}))]
+                                                     (conj vote {:last_update now :pid pid-uuid}))]
                    (if (= (count new-vote-result) 1)
                      {:error-code :ok}
                      (throw (ex-info "New vote error" {:error-code :new-vote-failed})))))))

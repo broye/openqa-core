@@ -5,6 +5,7 @@
         domain_shard : map domain to shard. Programmatically managed
         post : main data table for all posts, including question / answer / comment
         stats : question count by domain & topic
+        vote : vote records
 */
 
 create table domain_shard (
@@ -65,6 +66,7 @@ create table vote (
        pid UUID, -- pid (question / answer / comment)
        uid varchar(80), -- external user id
        user_name text, -- external  user name
+       domain varchar(80), -- domain
        user_avatar text, -- external user avatar
        type char(1), -- u : upvote, d : down vote
        primary key (pid, uid), -- user can vote only once
