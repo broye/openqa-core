@@ -11,7 +11,9 @@
                  [io.forward/yaml "1.0.9"]
                  [honeysql "0.9.4"]
                  [io.vertx/vertx-rx-java2 "3.8.1"]
-                 [io.vertx/vertx-web "3.8.1"]]
+                 [io.vertx/vertx-web "3.8.1"]
+                 [io.vertx/vertx-pg-client "3.8.1"]
+                 [cheshire "5.9.0"]]
   :main ^:skip-aot io.oqa.core.main
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

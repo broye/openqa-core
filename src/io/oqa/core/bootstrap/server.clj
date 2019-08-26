@@ -2,20 +2,21 @@
   (:import (io.vertx.core Vertx Handler)
            (io.vertx.core.net NetSocket)
            (io.vertx.core.http HttpMethod)
-           (io.vertx.ext.web Router))
+           (io.vertx.ext.web Router)
+           (io.vertx.ext.web.handler BodyHandler))
   (:require [io.oqa.core.bootstrap.config :as config]
-            [io.oqa.core.service.db :as db]))
+            [io.oqa.core.service.db :as db]
+            [io.oqa.core.service.rest.handlers :as handlers]))
 
 (def httpRequestHandler
   (reify Handler
     (handle [this request]
       (.. request response (end "hello world")))))
 
-(defn init-sub-router [vertx end-point http-method rest-handler]
+(defn init-sub-router [vertx]
   ;; init sub router
-
   (let [router (Router/router vertx)]
-    (.. router (route http-method end-point) (handler rest-handler))
+    (.. router route (handler (BodyHandler/create)))
     router))
 
 (defn start []
@@ -27,14 +28,17 @@
         {:keys [REST Default Shards]} config
         {:keys [endpointPrefix listens]} REST]
     (db/init-db-service Default Shards vertx)
-
+    (println "endpint-prefix is >>>>>>>>>> " endpoint-prefix)
     (if (:disabled REST)
       (println "REST server disabled...")
       (let [server (. vertx createHttpServer )
             main-router (Router/router vertx)
-            test-sub-router (init-sub-router vertx "/test" HttpMethod/GET httpRequestHandler)]
-        (. main-router mountSubRouter endpoint-prefix test-sub-router)
-        (. server requestHandler main-router)
+            sub-router (init-sub-router vertx)]
+        (.. sub-router (get "/test") (handler httpRequestHandler))
+        (.. sub-router (post "/core/post") (handler handlers/new-post-handler))
+        (. main-router mountSubRouter endpoint-prefix sub-router)
+        (doto server
+          (.requestHandler main-router))
         (doseq [{:keys [host port]} listens]
           (. server listen (or port 8080) (or host "localhost"))
           (println "REST server started @ host " (or host "localhost") " port " (or port 8080)))))))

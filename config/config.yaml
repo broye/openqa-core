@@ -5,7 +5,7 @@
 
 REST:
   disabled: false # Optional. Disable REST server if this is purely used as Postgresql to ES loader
-  endpointPrefix: /oqa/api/ # api endpoint prefix
+  endpointPrefix: /oqa/api # api endpoint prefix
   listens:  # listens @ host and port
     - host: localhost # host, ip v4
       port: 8081 #port
