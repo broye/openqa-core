@@ -7,14 +7,11 @@
                  ;; https://mvnrepository.com/artifact/io.netty/netty-all
                  [clj-postgresql "0.7.0"]
                  [hikari-cp "2.8.0"]
-                 [io.vertx/vertx-core "3.8.0"]
+                 [io.vertx/vertx-core "3.8.1"]
                  [io.forward/yaml "1.0.9"]
                  [honeysql "0.9.4"]
-                 [io.vertx/vertx-rx-java2 "3.8.0"]
-                 [io.vertx/vertx-sql-common "3.8.0"]
-                 [io.vertx/vertx-sql-client "3.8.0"]
-                 [io.vertx/vertx-pg-client "3.8.0"]
-                 ]
+                 [io.vertx/vertx-rx-java2 "3.8.1"]
+                 [io.vertx/vertx-web "3.8.1"]]
   :main ^:skip-aot io.oqa.core.main
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

@@ -2,6 +2,11 @@
   (:refer-clojure :exclude [load])
   (:require [yaml.core :as yaml]))
 
+;; global config
+(def config (ref {}))
+
+;; load config
+
 (defn load-config
   ([] (load-config "./config/config.yaml"))
-  ([file-name] (yaml/from-file file-name)))
+  ([file-name] (dosync (ref-set config (yaml/from-file file-name)))))

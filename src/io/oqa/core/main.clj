@@ -6,6 +6,7 @@
 (defn -main
   "Boot strap server..."
   [& args]
-  (let [config-file (first args)]
-    (let [config (config/load-config config-file)]
-      (server/start config))))
+  (let [config-file (first args)
+        _ (config/load-config config-file)
+        config @config/config]
+    (server/start)))
