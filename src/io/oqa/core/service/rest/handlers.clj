@@ -6,6 +6,7 @@
   (:require [io.oqa.core.bootstrap.config :as config]
             [cheshire.core :as cheshire]
             [io.oqa.core.service.db.posts :as posts]
+            [io.oqa.core.service.db.query :as query]
             [io.oqa.core.service.db :as db]))
 
 
@@ -43,4 +44,14 @@
             result (if (or (= status "i") (= status "r"))
                      (posts/delete-draft data)
                      (posts/mark-post-deleted data)) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def query-post-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            _ (println "data is >>>>> " data)
+            result (query/query-post data) ]
         (.. context response (end (cheshire/generate-string result)))))))
