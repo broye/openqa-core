@@ -19,3 +19,14 @@ Content-Type: application/json
 }
 
 # End
+
+# Update user infor
+PUT http://localhost:8081/oqa/api/core/user
+Content-Type: application/json
+{
+  "domain": "default",
+  "uid": "a0001",
+  "user_name": "User-1234"
+}
+
+# End

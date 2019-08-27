@@ -50,6 +50,9 @@
         ;; Update post route
         (.. sub-router (put "/core/post") (handler handlers/update-post-handler))
 
+        ;; Update user info accross posts
+        (.. sub-router (put "/core/user") (handler handlers/update-user-handler))
+
         ;; Delete post route
         (.. sub-router (delete "/core/post/:pid/:domain/:status") (handler handlers/delete-post-handler))
 

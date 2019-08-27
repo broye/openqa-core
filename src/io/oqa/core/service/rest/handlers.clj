@@ -8,6 +8,7 @@
             [io.oqa.core.service.db.posts :as posts]
             [io.oqa.core.service.db.query :as query]
             [io.oqa.core.service.db.vote :as vote]
+            [io.oqa.core.service.db.user-info :as user-info]
             [io.oqa.core.service.db :as db]))
 
 
@@ -28,6 +29,16 @@
             data (cheshire/parse-string body true)
             _ (println "data is >>>>> " data)
             result (posts/update-post data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def update-user-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            _ (println "data is >>>>> " data)
+            result (user-info/update-user-info data) ]
         (.. context response (end (cheshire/generate-string result)))))))
 
 (def delete-post-handler
