@@ -1,0 +1,33 @@
+# Vote query
+POST http://localhost:8081/oqa/api/core/query/vote
+Content-Type: application/json
+{
+  "pid": "22e34f39-a778-4aa2-b683-9e64d906ed4c",
+  "size": 30,
+  "domain": "default",
+  "from_seq": 103
+
+}
+
+# End
+
+# Vote Stats
+POST http://localhost:8081/oqa/api/core/query/stats
+Content-Type: application/json
+{
+  "domain": "default"
+}
+
+# End
+
+# Update user infor
+PUT http://localhost:8081/oqa/api/core/user
+Content-Type: application/json
+{
+  "domain": "default",
+  "uid": "test12345",
+  "user_name": "User-1234",
+  "user_avatar": "https://abc.com/nice.jpg"
+}
+
+# End

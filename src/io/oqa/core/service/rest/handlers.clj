@@ -9,6 +9,7 @@
             [io.oqa.core.service.db.query :as query]
             [io.oqa.core.service.db.vote :as vote]
             [io.oqa.core.service.db.user-info :as user-info]
+            [io.oqa.core.service.db.domain :as domain]
             [io.oqa.core.service.db :as db]))
 
 
@@ -105,4 +106,31 @@
             data (cheshire/parse-string body true)
             _ (println "data is >>>>> " data)
             result (query/query-stats data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def new-domain-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            result (domain/new-domain data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def update-domain-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            result (domain/update-domain data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def delete-domain-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            request (. context request)
+            domain (. request getParam "domain")
+            result (domain/delete-domain domain) ]
         (.. context response (end (cheshire/generate-string result)))))))

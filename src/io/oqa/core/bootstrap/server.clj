@@ -65,6 +65,15 @@
         ;; Query stats
         (.. sub-router (post "/core/query/stats") (handler handlers/query-stats-handler))
 
+        ;; New domain route
+        (.. sub-router (post "/core/domain") (handler handlers/new-domain-handler))
+
+        ;; Update domain route
+        (.. sub-router (put "/core/domain") (handler handlers/update-domain-handler))
+
+        ;; Delete domain route
+        (.. sub-router (delete "/core/domain/:domain") (handler handlers/delete-domain-handler))
+
         ;; Mount sub route
         (. main-router mountSubRouter endpoint-prefix sub-router)
         (doto server
