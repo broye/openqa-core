@@ -27,3 +27,20 @@
             _ (println "data is >>>>> " data)
             result (posts/update-post data) ]
         (.. context response (end (cheshire/generate-string result)))))))
+
+(def delete-post-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            request (. context request)
+            pid (. request getParam "pid")
+            domain (. request getParam "domain")
+            status (. request getParam "status")
+            body (. context getBodyAsString)
+            data {:pid pid :domain domain :status status}
+            _ (println "data is >>>>> " data)
+            status (:status data)
+            result (if (or (= status "i") (= status "r"))
+                     (posts/delete-draft data)
+                     (posts/mark-post-deleted data)) ]
+        (.. context response (end (cheshire/generate-string result)))))))

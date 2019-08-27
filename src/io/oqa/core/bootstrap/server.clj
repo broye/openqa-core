@@ -44,9 +44,14 @@
         ;; Update post route
         (.. sub-router (put "/core/post") (handler handlers/update-post-handler))
 
+        ;; Delete post route
+        (.. sub-router (delete "/core/post/:pid/:domain/:status") (handler handlers/delete-post-handler))
+
+        ;; Mount sub route
         (. main-router mountSubRouter endpoint-prefix sub-router)
         (doto server
           (.requestHandler main-router))
+
         (doseq [{:keys [host port]} listens]
           (. server listen (or port 8080) (or host "localhost"))
           (println "REST server started @ host " (or host "localhost") " port " (or port 8080)))))))

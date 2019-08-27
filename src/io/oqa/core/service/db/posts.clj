@@ -279,8 +279,8 @@
     (catch Throwable e (do (println e) {:error-code :unknown-error}))))
 
 (defn mark-post-deleted
-  "Mark post status to seleted but not pysically delete the post. Client must explicitly set fields to blank if necessary"
-  [{pid :pid domain :domain :as post}]
+  "Mark post status to deleted but not pysically delete the post. Client must explicitly set fields to blank if necessary"
+  [{pid :pid domain :domain status :status :as post}]
   (try
     (println pid domain post)
     (let [now (new java.sql.Timestamp (.. (java.util.Calendar/getInstance) getTime getTime))
@@ -292,12 +292,12 @@
                            :type
                            :seq_id
                            :create_date) ;; remove un-modifiable fields
-                   (assoc :last_update now :status "d"))
+                   (assoc :last_update now :status "d" :title "" :content "" :draft_title ""  :draft_content ""))
           count (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection domain))}]
                   (jdbc/update! conn
                                 :post
                                 post
-                                ["pid = ? And domain = ? And status != ?" (java.util.UUID/fromString pid) domain "d"]))]
+                                ["pid = ? And domain = ? And status = ?" (java.util.UUID/fromString pid) domain status]))]
       (if (= (first count) 1)
         {:error-code :ok}
         {:error-code :post-not-found}))
