@@ -7,6 +7,7 @@
             [cheshire.core :as cheshire]
             [io.oqa.core.service.db.posts :as posts]
             [io.oqa.core.service.db.query :as query]
+            [io.oqa.core.service.db.vote :as vote]
             [io.oqa.core.service.db :as db]))
 
 
@@ -54,4 +55,23 @@
             data (cheshire/parse-string body true)
             _ (println "data is >>>>> " data)
             result (query/query-post data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def new-vote-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            result (vote/new-vote data) ]
+        (.. context response (end (cheshire/generate-string result)))))))
+
+
+(def unvote-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            result (vote/unvote data) ]
         (.. context response (end (cheshire/generate-string result)))))))

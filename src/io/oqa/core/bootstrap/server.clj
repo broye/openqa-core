@@ -41,6 +41,12 @@
         ;; New post route
         (.. sub-router (post "/core/post") (handler handlers/new-post-handler))
 
+        ;; New vote
+        (.. sub-router (post "/core/vote") (handler handlers/new-vote-handler))
+
+        ;; Unvote
+        (.. sub-router (post "/core/unvote") (handler handlers/unvote-handler))
+
         ;; Update post route
         (.. sub-router (put "/core/post") (handler handlers/update-post-handler))
 
