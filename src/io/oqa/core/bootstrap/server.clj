@@ -53,8 +53,11 @@
         ;; Delete post route
         (.. sub-router (delete "/core/post/:pid/:domain/:status") (handler handlers/delete-post-handler))
 
-        ;; Delete post route
+        ;; Query post route
         (.. sub-router (post "/core/query/post") (handler handlers/query-post-handler))
+
+        ;; Query vote route
+        (.. sub-router (post "/core/query/vote") (handler handlers/query-vote-handler))
 
         ;; Mount sub route
         (. main-router mountSubRouter endpoint-prefix sub-router)

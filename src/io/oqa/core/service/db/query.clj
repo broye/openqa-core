@@ -42,9 +42,10 @@
                                                       [:= :uid uid])
                                                     (if (and (nil? from_seq) (str/blank? uid))
                                                       nil
-                                                      [:>= :seq_id from_seq])]
+                                                      [:>= :seq_id (or from_seq 0)])]
                                             :limit (or (and size (inc size)) 1)
                                             :order-by [[:seq_id :asc]]})
+                   _ (println "sql-command is >>>>>>>> " sql-command)
                    query-result (jdbc/query conn sql-command)]
                (println (count query-result))
                (if (str/blank? uid)
