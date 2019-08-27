@@ -59,6 +59,9 @@
         ;; Query vote route
         (.. sub-router (post "/core/query/vote") (handler handlers/query-vote-handler))
 
+        ;; Query stats
+        (.. sub-router (post "/core/query/stats") (handler handlers/query-stats-handler))
+
         ;; Mount sub route
         (. main-router mountSubRouter endpoint-prefix sub-router)
         (doto server
