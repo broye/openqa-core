@@ -173,6 +173,7 @@
   (cond
     (not (str/blank? status)) { :error-code :can-not-modify-status}
     (str/blank? pid) { :error-code :pid-must-be-provided}
+    (str/blank? type) { :error-code :type-must-be-provided}
     (not (str/blank? qid)) { :error-code :can-not-update-qid}
     (not (str/blank? aid)) { :error-code :can-not-update-aid}
     (not (str/blank? seq_id)) { :error-code :can-not-update-seq_id}
@@ -198,15 +199,15 @@
                                :create_date) ;; remove un-modifiable fields
                        (assoc :last_update now :last_active now))
               count (jdbc/with-db-transaction [conn {:datasource (deref (get @domain-to-connection domain))}]
-                      (jdbc/update! conn
-                                    :post
-                                    post
-                                    ["type = ? And pid = ? And domain = ? " type (java.util.UUID/fromString pid) domain])
                       (when (and (= type "q") (not (str/blank? (:title post))))
                         (jdbc/update! conn
                                       :post
                                       {:title (:title post)}
-                                      ["qid = ? And domain = ? " (java.util.UUID/fromString pid) domain])))]
+                                      ["qid = ? And domain = ? " (java.util.UUID/fromString pid) domain]))
+                      (jdbc/update! conn
+                                    :post
+                                    post
+                                    ["type = ? And pid = ? And domain = ? " type (java.util.UUID/fromString pid) domain]))]
           (if (= (first count) 1)
             {:error-code :ok}
             {:error-code :post-not-found}))

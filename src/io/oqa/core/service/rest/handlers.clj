@@ -16,5 +16,14 @@
             body (. context getBodyAsString)
             data (cheshire/parse-string body true)
             result (posts/new-post data) ]
-        (println "body is >>>>> >>>>>>>>>>>>" data "result is >>> " result)
+        (.. context response (end (cheshire/generate-string result)))))))
+
+(def update-post-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            body (. context getBodyAsString)
+            data (cheshire/parse-string body true)
+            _ (println "data is >>>>> " data)
+            result (posts/update-post data) ]
         (.. context response (end (cheshire/generate-string result)))))))

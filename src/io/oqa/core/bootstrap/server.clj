@@ -34,8 +34,16 @@
       (let [server (. vertx createHttpServer )
             main-router (Router/router vertx)
             sub-router (init-sub-router vertx)]
+
+        ;; Test route
         (.. sub-router (get "/test") (handler httpRequestHandler))
+
+        ;; New post route
         (.. sub-router (post "/core/post") (handler handlers/new-post-handler))
+
+        ;; Update post route
+        (.. sub-router (put "/core/post") (handler handlers/update-post-handler))
+
         (. main-router mountSubRouter endpoint-prefix sub-router)
         (doto server
           (.requestHandler main-router))
