@@ -4,16 +4,16 @@
 
 OpenQA, Open Question Answer, is an opensource REST server that provides core data structure and REST service for question and answer, modeled after StackOverflow, Quora and Zhihu (知乎).
 
-The purpose of OpenQA is to provide a solide backend for developers to develop Question and Answer. It ** DOES NOT ** aims to be an QA with full featured UI.
+The purpose of OpenQA is to provide a solid backend for developers to develop Question and Answer. It ** DOES NOT ** aims to be an QA site with full featured UI that competes against StackOverflow, Quora or Zhihu, but aims as backend for developers to develop their own QA sites that suites their own needs.
 
 OpenQA Core is the center of OpenQA, a REST server developed with Clojure. It uses Postgresql as datastore and uses ElasticSearch as search engine.
 
-OpenQA Core focuses purely on the esentials of an Question and Answer site:
+OpenQA Core focuses purely on the essentials of an Question and Answer site:
 
 - Create / Update / Delete / Query Questions, Answers, and Comments
 - Upvote / Downvote Questions, Answers
 - Drafting / Publish / Delete Drafts
-- Search powered by ElasticSearch
+- Search questions and answers
 
 A Web frontend will be developed but itself is not considered a core component, as least initially.
 
@@ -21,7 +21,7 @@ A Web frontend will be developed but itself is not considered a core component, 
 
 It was designed with following principle:
 
-** Flexible data strucutre that can power complex QA sites **
+* Flexible data strucutre that can power complex QA sites *
 
 The core data structure is built with following features:
 
@@ -33,7 +33,7 @@ The core data structure is built with following features:
 - upvote_count / downvote_cout: used for upvoting / downvoting functions.
 - seq_id: used to indicate time squence of Questions / Answers / Comments with the same domain.
 
-** Minimal core **
+* Minimal core *
 
 The core only provides prebuilt question and answer content management services, and aims to provide these services fast, correct and extensible.
 
