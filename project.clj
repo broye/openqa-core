@@ -13,6 +13,7 @@
                  [io.vertx/vertx-rx-java2 "3.8.1"]
                  [io.vertx/vertx-web "3.8.1"]
                  [io.vertx/vertx-pg-client "3.8.1"]
+                 [org.clojure/tools.cli "0.4.2"]
                  [cheshire "5.9.0"]]
   :main ^:skip-aot io.openqa.core.main
   :target-path "target/%s"
