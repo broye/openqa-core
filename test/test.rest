@@ -25,8 +25,31 @@ PUT http://localhost:8081/oqa/api/core/user
 Content-Type: application/json
 {
   "domain": "default",
-  "uid": "a0001",
-  "user_name": "User-1234"
+  "uid": "test12345",
+  "user_name": "User-1234",
+  "user_avatar": "https://abc.com/nice.jpg"
+}
+
+# End
+
+# New domain
+POST http://localhost:8081/oqa/api/core/domain
+Content-Type: application/json
+{
+  "domain": "test",
+  "shard": "default",
+  "description": "nice..."
+}
+
+# End
+
+# Update domain
+PUT http://localhost:8081/oqa/api/core/domain
+Content-Type: application/json
+{
+  "domain": "test",
+  "shard": "default",
+  "description": "nice..."
 }
 
 # End

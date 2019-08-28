@@ -114,6 +114,7 @@
       (let [response (. context response)
             body (. context getBodyAsString)
             data (cheshire/parse-string body true)
+            _ (println "domain data is >>>>>>> " data)
             result (domain/new-domain data) ]
         (.. context response (end (cheshire/generate-string result)))))))
 

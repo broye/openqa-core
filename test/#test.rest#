@@ -31,3 +31,30 @@ Content-Type: application/json
 }
 
 # End
+
+# New domain
+POST http://localhost:8081/oqa/api/core/domain
+Content-Type: application/json
+{
+  "domain": "test",
+  "shard": "default",
+  "description": "nice..."
+}
+
+# End
+
+# Update domain
+PUT http://localhost:8081/oqa/api/core/domain
+Content-Type: application/json
+{
+  "domain" : "test",
+  "shard" : "oqa2"
+}
+
+# End
+
+# Delete domain
+DELETE http://localhost:8081/oqa/api/core/domain/test
+Content-Type: application/json
+
+# End

@@ -4,7 +4,6 @@
             PgPool)
            (io.vertx.sqlclient PoolOptions)
            (io.vertx.core Handler)
-           (java.sql SQLException)
            (java.util UUID))
 
   (:require [io.oqa.core.service.db :refer [domain-to-connection]]
@@ -47,17 +46,18 @@
                  {:error-code :ok}
                  (throw (ex-info "New domain error" {:error-code :new-domain-failed})))))
            (catch clojure.lang.ExceptionInfo e (ex-data e))
-           (catch SQLException e (do (println e) {:error-code :database-error :db-error-code (. e getErrorCode) :db-error-state (. e getSQLState)}))
+           (catch SQLException e)
+           (catch Exception e (do (println e) {:error-code :database-error}))
            (catch Throwable e (do (println e) {:error-code :unkown-error}))))))
 
 (defn update-domain
   "Update a domain"
   [{:keys [domain shard] :as domain-shard}]
   (let [config @config/config
-        Default (:Default config)
-        default-domain (:domain Default)
-        shards (:Shards config)
-        {error-code :error-code :as error} (validate-domain domain-shard)]
+        Default {:Default config}
+        default-domain {:domain Default}
+        shards {:Shards config}
+        {error-code :error-code :as error} (validate-domain domain-shard default-domain shards)]
     (if (not= error-code :ok)
       error
       (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection default-domain))}]
@@ -79,8 +79,8 @@
   "Delete a domain"
   [domain]
   (let [config @config/config
-        Default (:Default config)
-        default-domain (:domain Default)]
+        Default {:Default config}
+        default-domain {:domain Default}]
     (if (= domain default-domain)
       {:error-code :can-not-remove-default-domain}
       (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection default-domain))}]
