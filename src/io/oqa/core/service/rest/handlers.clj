@@ -135,3 +135,10 @@
             domain (. request getParam "domain")
             result (domain/delete-domain domain) ]
         (.. context response (end (cheshire/generate-string result)))))))
+
+(def query-domain-handler
+  (reify Handler
+    (handle [this context]
+      (let [response (. context response)
+            result (query/query-domain) ]
+        (.. context response (end (cheshire/generate-string result)))))))

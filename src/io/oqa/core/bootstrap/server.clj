@@ -74,6 +74,9 @@
         ;; Delete domain route
         (.. sub-router (delete "/core/domain/:domain") (handler handlers/delete-domain-handler))
 
+        ;; Query domains
+        (.. sub-router (get "/core/query/domain") (handler handlers/query-domain-handler))
+
         ;; Mount sub route
         (. main-router mountSubRouter endpoint-prefix sub-router)
         (doto server

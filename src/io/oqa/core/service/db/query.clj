@@ -12,6 +12,7 @@
             [honeysql.core :as sql]
             [honeysql.helpers :refer :all :as helpers]
             [clojure.java.jdbc :as jdbc]
+            [io.oqa.core.bootstrap.config :as config]
             [clojure.string :as str]))
 
 (defmethod fmt/fn-handler "any" [_ field value]
@@ -195,3 +196,20 @@
            (catch Exception e (do (println e) {:error-code :database-error}))
            (catch Throwable e (do (println e) {:error-code :unkown-error}))
            ))))
+
+(defn query-domain
+  "Query stats from postgresql"
+  []
+  (let [config @config/config
+        Default (:Default config)
+        default-domain (:domain Default)]
+    (try (jdbc/with-db-connection [conn {:datasource (deref (get @domain-to-connection default-domain))}]
+           (let [sql-command (sql/format {:select [:*]
+                                          :from [:domain_shard]
+                                          :order-by [[:last_update :desc]]})
+                 query-result (jdbc/query conn sql-command)]
+             {:error-code :ok
+              :has-more :false
+              :data query-result}))
+         (catch Exception e (do (println e) {:error-code :database-error}))
+         (catch Throwable e (do (println e) {:error-code :unkown-error})))))

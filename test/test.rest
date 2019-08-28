@@ -47,9 +47,20 @@ Content-Type: application/json
 PUT http://localhost:8081/oqa/api/core/domain
 Content-Type: application/json
 {
-  "domain": "test",
-  "shard": "default",
-  "description": "nice..."
+  "domain" : "test",
+  "shard" : "oqa2"
 }
+
+# End
+
+# Delete domain
+DELETE http://localhost:8081/oqa/api/core/domain/test
+Content-Type: application/json
+
+# End
+
+# Query domains
+GET http://localhost:8081/oqa/api/core/query/domain
+Content-Type: application/json
 
 # End
