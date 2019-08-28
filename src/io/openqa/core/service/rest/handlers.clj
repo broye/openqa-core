@@ -1,16 +1,16 @@
-(ns io.oqa.core.service.rest.handlers
+(ns io.openqa.core.service.rest.handlers
   (:import (io.vertx.core Vertx Handler)
            (io.vertx.core.net NetSocket)
            (io.vertx.core.http HttpMethod)
            (io.vertx.ext.web Router))
-  (:require [io.oqa.core.bootstrap.config :as config]
+  (:require [io.openqa.core.bootstrap.config :as config]
             [cheshire.core :as cheshire]
-            [io.oqa.core.service.db.posts :as posts]
-            [io.oqa.core.service.db.query :as query]
-            [io.oqa.core.service.db.vote :as vote]
-            [io.oqa.core.service.db.user-info :as user-info]
-            [io.oqa.core.service.db.domain :as domain]
-            [io.oqa.core.service.db :as db]))
+            [io.openqa.core.service.db.posts :as posts]
+            [io.openqa.core.service.db.query :as query]
+            [io.openqa.core.service.db.vote :as vote]
+            [io.openqa.core.service.db.user-info :as user-info]
+            [io.openqa.core.service.db.domain :as domain]
+            [io.openqa.core.service.db :as db]))
 
 
 (def new-post-handler

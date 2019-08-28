@@ -1,14 +1,14 @@
 (ns core.core-test
   (:import (io.vertx.core Vertx Handler))
   (:require [clojure.test :refer :all]
-            [io.oqa.core.service.db.helpers :as helpers]
-            [io.oqa.core.service.db :as db]
-            [io.oqa.core.service.db.domain :as domain]
-            [io.oqa.core.service.db.posts :as posts]
-            [io.oqa.core.service.db.vote :as vote]
-            [io.oqa.core.service.db.query :as query]
-            [io.oqa.core.service.db.user-info :as user-info]
-            [io.oqa.core.bootstrap.config :as config]))
+            [io.openqa.core.service.db.helpers :as helpers]
+            [io.openqa.core.service.db :as db]
+            [io.openqa.core.service.db.domain :as domain]
+            [io.openqa.core.service.db.posts :as posts]
+            [io.openqa.core.service.db.vote :as vote]
+            [io.openqa.core.service.db.query :as query]
+            [io.openqa.core.service.db.user-info :as user-info]
+            [io.openqa.core.bootstrap.config :as config]))
 
 (def config-file "/home/fqye/projects/oqa/core/config/config.yaml")
 

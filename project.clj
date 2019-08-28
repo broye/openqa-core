@@ -1,5 +1,5 @@
 (defproject core "0.1.0-SNAPSHOT"
-  :description "OQA, Open Question Answer / open quora alike core."
+  :description "OpenQA, Open Question Answer / open quora alike core."
   :url "https://github.com/broye/openqa-core"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
@@ -14,6 +14,6 @@
                  [io.vertx/vertx-web "3.8.1"]
                  [io.vertx/vertx-pg-client "3.8.1"]
                  [cheshire "5.9.0"]]
-  :main ^:skip-aot io.oqa.core.main
+  :main ^:skip-aot io.openqa.core.main
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

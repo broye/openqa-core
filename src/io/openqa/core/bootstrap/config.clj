@@ -1,4 +1,4 @@
-(ns io.oqa.core.bootstrap.config
+(ns io.openqa.core.bootstrap.config
   (:refer-clojure :exclude [load])
   (:require [yaml.core :as yaml]))
 

@@ -1,4 +1,4 @@
-(ns io.oqa.core.service.db.helpers
+(ns io.openqa.core.service.db.helpers
   (:import (io.vertx.reactivex.sqlclient Tuple))
   (:require [clojure.string :as str]))
 

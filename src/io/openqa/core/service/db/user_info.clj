@@ -1,4 +1,4 @@
-(ns io.oqa.core.service.db.user-info
+(ns io.openqa.core.service.db.user-info
   (:import (io.vertx.pgclient
             PgConnectOptions
             PgPool)
@@ -6,8 +6,8 @@
            (io.vertx.core Handler)
            (java.util UUID))
 
-  (:require [io.oqa.core.service.db :refer [domain-to-connection]]
-            [io.oqa.core.service.db.helpers :as helpers]
+  (:require [io.openqa.core.service.db :refer [domain-to-connection]]
+            [io.openqa.core.service.db.helpers :as helpers]
             [clj-postgresql.core :as pg]
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as str]))

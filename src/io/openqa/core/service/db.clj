@@ -1,4 +1,4 @@
-(ns io.oqa.core.service.db
+(ns io.openqa.core.service.db
   (:require [clj-postgresql.core :as pg]
             [hikari-cp.core :refer :all]
             [clojure.java.jdbc :as jdbc]))

@@ -1,12 +1,12 @@
-(ns io.oqa.core.bootstrap.server
+(ns io.openqa.core.bootstrap.server
   (:import (io.vertx.core Vertx Handler)
            (io.vertx.core.net NetSocket)
            (io.vertx.core.http HttpMethod)
            (io.vertx.ext.web Router)
            (io.vertx.ext.web.handler BodyHandler))
-  (:require [io.oqa.core.bootstrap.config :as config]
-            [io.oqa.core.service.db :as db]
-            [io.oqa.core.service.rest.handlers :as handlers]))
+  (:require [io.openqa.core.bootstrap.config :as config]
+            [io.openqa.core.service.db :as db]
+            [io.openqa.core.service.rest.handlers :as handlers]))
 
 (def httpRequestHandler
   (reify Handler

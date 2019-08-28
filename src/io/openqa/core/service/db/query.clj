@@ -1,4 +1,4 @@
-(ns io.oqa.core.service.db.query
+(ns io.openqa.core.service.db.query
   (:import (io.vertx.pgclient
             PgConnectOptions
             PgPool)
@@ -6,13 +6,13 @@
            (io.vertx.core Handler)
            (java.util UUID))
 
-  (:require [io.oqa.core.service.db :refer [domain-to-connection]]
+  (:require [io.openqa.core.service.db :refer [domain-to-connection]]
             [clj-postgresql.core :as pg]
             [honeysql.format :as fmt]
             [honeysql.core :as sql]
             [honeysql.helpers :refer :all :as helpers]
             [clojure.java.jdbc :as jdbc]
-            [io.oqa.core.bootstrap.config :as config]
+            [io.openqa.core.bootstrap.config :as config]
             [clojure.string :as str]))
 
 (defmethod fmt/fn-handler "any" [_ field value]

@@ -1,4 +1,4 @@
-(ns io.oqa.core.service.db.posts
+(ns io.openqa.core.service.db.posts
   (:import (io.vertx.pgclient
             PgConnectOptions
             PgPool)
@@ -6,7 +6,7 @@
            (io.vertx.core Handler)
            (java.util UUID))
 
-  (:require [io.oqa.core.service.db :refer [domain-to-connection]]
+  (:require [io.openqa.core.service.db :refer [domain-to-connection]]
             [clj-postgresql.core :as pg]
             [honeysql.core :as sql]
             [honeysql.helpers :refer :all :as helpers]

@@ -1,7 +1,7 @@
-(ns io.oqa.core.main
+(ns io.openqa.core.main
   (:gen-class)
-  (:require [io.oqa.core.bootstrap.server :as server]
-            [io.oqa.core.bootstrap.config :as config]))
+  (:require [io.openqa.core.bootstrap.server :as server]
+            [io.openqa.core.bootstrap.config :as config]))
 
 (defn -main
   "Boot strap server..."

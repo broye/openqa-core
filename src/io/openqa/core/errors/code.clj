@@ -1,4 +1,4 @@
-(ns io.oqa.core.error.code)
+(ns io.openqa.core.error.code)
 (def error-codes {:ok "Ok"
                   :domain-not-found "domain-not-found"})
 
