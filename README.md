@@ -21,7 +21,7 @@ A Web frontend will be developed but itself is not considered a core component, 
 
 It was designed with following principle:
 
-* Flexible data strucutre that can power complex QA sites *
+**Flexible data strucutre that can power complex QA sites**
 
 The core data structure is built with following features:
 
@@ -33,7 +33,7 @@ The core data structure is built with following features:
 - upvote_count / downvote_cout: used for upvoting / downvoting functions.
 - seq_id: used to indicate time squence of Questions / Answers / Comments with the same domain.
 
-* Minimal core *
+**Minimal core**
 
 The core only provides prebuilt question and answer content management services, and aims to provide these services fast, correct and extensible.
 
