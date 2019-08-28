@@ -1,5 +1,7 @@
 # OpenQA
 
+**Under Development. NOT ready for serious use**
+
 ## Introduction
 
 OpenQA, Open Question Answer, is an opensource REST server that provides core data structure and REST service for question and answer, modeled after StackOverflow, Quora and Zhihu (知乎).
